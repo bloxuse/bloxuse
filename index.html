@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BloxUse — Roblox Trading</title>
+<title>TradeVault — Roblox Trading</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -407,24 +407,24 @@ textarea.fi{resize:vertical;min-height:70px}
 <div class="overlay" id="mo-v">
   <div class="modal">
     <div class="mhd">
-      <div><div class="mh-t">Sign in with Roblox</div><div class="mh-s">no password · no signup · verify via bio</div></div>
+      <div><div class="mh-t">Sign in with Roblox</div><div class="mh-s">verify ownership via your bio · no password</div></div>
       <button class="mc" onclick="closeModal('mo-v')"><svg class="ico" style="width:12px;height:12px"><use href="#i-x"/></svg></button>
     </div>
     <div class="mb">
-      <!-- step 1 -->
+      <!-- step 1: enter username -->
       <div class="vstep on" id="vs1">
         <div class="step-pip">1</div>
         <div class="fg">
-          <label class="fl">Roblox Username</label>
-          <input class="fi" id="vu" placeholder="e.g. Builderman" autocomplete="off">
+          <label class="fl">Your Roblox Username</label>
+          <input class="fi" id="vu" placeholder="e.g. Builderman" autocomplete="off" onkeydown="if(event.key==='Enter')v1()">
           <div class="ferr" id="ve1" style="display:none"></div>
         </div>
         <button class="btn-p" onclick="v1()">Continue <svg class="ico" style="width:12px;height:12px"><use href="#i-ar"/></svg></button>
       </div>
-      <!-- step 2 -->
+      <!-- step 2: add phrase to bio -->
       <div class="vstep" id="vs2">
         <div class="step-pip">2</div>
-        <label class="fl" style="margin-bottom:7px">Copy this phrase into your Roblox bio</label>
+        <label class="fl" style="margin-bottom:7px">Add this phrase to your Roblox bio</label>
         <div class="phrase-box">
           <div style="flex:1">
             <span class="phrase-txt" id="v-phrase">—</span>
@@ -435,10 +435,10 @@ textarea.fi{resize:vertical;min-height:70px}
           </button>
         </div>
         <div class="how-to">
-          1. Go to <strong>roblox.com</strong> and open your profile settings<br>
-          2. Paste the phrase above into your <strong>bio / About section</strong><br>
-          3. Save, then click <strong>Verify</strong> below<br>
-          <span style="color:var(--t4)">You can remove it from your bio after verifying.</span>
+          1. Go to <strong>roblox.com</strong> → click your avatar → <strong>Settings</strong><br>
+          2. Paste the phrase above into your <strong>About / Bio</strong> field<br>
+          3. Click <strong>Save</strong> on Roblox, then come back and click Verify<br>
+          <span style="color:var(--t4)">You can remove it from your bio right after.</span>
         </div>
         <button class="btn-p" id="v-verifybtn" onclick="v2()">
           <svg class="ico" style="width:14px;height:14px;margin-right:6px"><use href="#i-shield"/></svg>Verify Bio
@@ -450,8 +450,17 @@ textarea.fi{resize:vertical;min-height:70px}
           <svg class="ico" style="width:12px;height:12px;margin-right:5px"><use href="#i-al"/></svg>Back
         </button>
         <div class="ferr" id="ve2" style="display:none;margin-top:8px"></div>
+        <!-- Edge function setup banner — shown when function not yet deployed -->
+        <div id="setup-banner" style="display:none;margin-top:14px;background:var(--gold-bg);border:1px solid var(--gold-ln);border-radius:var(--r);padding:13px 14px;font-size:11px;font-family:var(--mono);color:var(--t2);line-height:2">
+          <strong style="color:var(--gold)">⚙ One-time setup required</strong><br>
+          The verify function isn't deployed yet. Deploy it in 60 seconds:<br>
+          1. Go to your <a href="https://supabase.com/dashboard/project/elyrtnxrxqptupelkuvd/functions" target="_blank" style="color:var(--blue2)">Supabase Edge Functions page ↗</a><br>
+          2. Click <strong style="color:var(--t)">New Function</strong>, name it <strong style="color:var(--t)">verify-roblox</strong><br>
+          3. Paste the code from <strong style="color:var(--t)">verify-roblox-edge-function.ts</strong> and click <strong style="color:var(--t)">Deploy</strong><br>
+          Then click <strong style="color:var(--t)">Verify Bio</strong> again.
+        </div>
       </div>
-      <!-- step 3 -->
+      <!-- step 3: success -->
       <div class="vstep" id="vs3">
         <div class="ok-center">
           <div class="ok-ico"><svg class="ico" style="width:44px;height:44px"><use href="#i-checkc"/></svg></div>
@@ -873,11 +882,19 @@ function openDetail(id) {
 }
 
 /* ══ VERIFY FLOW ══ */
+/* ══ VERIFY — bio phrase via Supabase Edge Function ══ */
+var VERIFY_FN = 'https://elyrtnxrxqptupelkuvd.supabase.co/functions/v1/verify-roblox';
+
 function openVerify() {
   vstep(1);
-  document.getElementById('vu').value = '';
-  document.getElementById('ve1').style.display = 'none';
-  document.getElementById('ve2').style.display = 'none';
+  var u = document.getElementById('vu');
+  if(u) u.value = '';
+  var e1 = document.getElementById('ve1');
+  if(e1) e1.style.display = 'none';
+  var e2 = document.getElementById('ve2');
+  if(e2) e2.style.display = 'none';
+  var sb = document.getElementById('setup-banner');
+  if(sb) sb.style.display = 'none';
   openModal('mo-v');
 }
 
@@ -888,111 +905,92 @@ function vstep(n) {
   });
 }
 
-async function v1() {
-  var u = document.getElementById('vu').value.trim();
-  var e = document.getElementById('ve1');
-  if(!u){ e.textContent='Enter your Roblox username.'; e.style.display='block'; return; }
-  e.style.display='none';
+function v1() {
+  var u  = document.getElementById('vu').value.trim();
+  var e  = document.getElementById('ve1');
+  if(!u){ e.textContent = 'Enter your Roblox username.'; e.style.display = 'block'; return; }
+  e.style.display = 'none';
   vUser   = u;
   vPhrase = genPhrase();
   document.getElementById('v-phrase').textContent = vPhrase;
-  var wc = vPhrase.trim().split(/\s+/).length;
-  document.getElementById('v-wc').textContent = wc + ' words';
+  document.getElementById('v-wc').textContent = '7 words';
   document.getElementById('v-cpbtn').innerHTML = '<svg class="ico" style="width:12px;height:12px"><use href="#i-copy"/></svg> Copy';
   document.getElementById('v-cpbtn').classList.remove('ok');
   document.getElementById('ve2').style.display = 'none';
+  document.getElementById('setup-banner').style.display = 'none';
   vstep(2);
-}
-
-function genPhrase() {
-  var pool = WORDS.slice();
-  for(var i=pool.length-1;i>0;i--){
-    var j=Math.floor(Math.random()*(i+1));
-    var tmp=pool[i]; pool[i]=pool[j]; pool[j]=tmp;
-  }
-  return pool.slice(0,7).join(' ');
 }
 
 function v_copy() {
   var btn = document.getElementById('v-cpbtn');
-  try {
-    navigator.clipboard.writeText(vPhrase);
-  } catch(e) {
-    var ta=document.createElement('textarea'); ta.value=vPhrase; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  try { navigator.clipboard.writeText(vPhrase); } catch(e) {
+    var ta = document.createElement('textarea'); ta.value = vPhrase;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
   }
-  btn.innerHTML='<svg class="ico" style="width:12px;height:12px"><use href="#i-check"/></svg> Copied';
+  btn.innerHTML = '<svg class="ico" style="width:12px;height:12px"><use href="#i-check"/></svg> Copied';
   btn.classList.add('ok');
-  setTimeout(function(){ btn.innerHTML='<svg class="ico" style="width:12px;height:12px"><use href="#i-copy"/></svg> Copy'; btn.classList.remove('ok'); }, 2000);
-}
-
-async function proxyFetch(url) {
-  var proxies = [
-    function(u){ return 'https://corsproxy.io/?'+encodeURIComponent(u); },
-    function(u){ return 'https://api.allorigins.win/get?url='+encodeURIComponent(u); },
-    function(u){ return 'https://thingproxy.freeboard.io/fetch/'+u; }
-  ];
-  for(var i=0;i<proxies.length;i++){
-    try {
-      var r = await fetch(proxies[i](url), {signal: AbortSignal.timeout(8000)});
-      if(!r.ok) continue;
-      var txt = await r.text();
-      if(txt.indexOf('"contents"') !== -1 && txt.indexOf('{"contents"') === 0){
-        var j = JSON.parse(txt);
-        return JSON.parse(j.contents);
-      }
-      return JSON.parse(txt);
-    } catch(err){ continue; }
-  }
-  throw new Error('Could not reach Roblox — check your internet and try again.');
+  setTimeout(function(){
+    btn.innerHTML = '<svg class="ico" style="width:12px;height:12px"><use href="#i-copy"/></svg> Copy';
+    btn.classList.remove('ok');
+  }, 2000);
 }
 
 async function v2() {
   var btn = document.getElementById('v-verifybtn');
   var err = document.getElementById('ve2');
-  btn.disabled=true;
-  btn.innerHTML='<span class="spin"></span> Checking bio…';
-  err.style.display='none';
-  try {
-    var match = null;
-    try {
-      var searchData = await proxyFetch('https://users.roblox.com/v1/users/search?keyword='+encodeURIComponent(vUser)+'&limit=10');
-      var results = searchData.data||[];
-      match = results.find(function(u){ return u.name.toLowerCase()===vUser.toLowerCase(); }) || null;
-    } catch(e){}
+  var banner = document.getElementById('setup-banner');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Verifying…';
+  err.style.display = 'none';
+  banner.style.display = 'none';
 
-    if(!match){
-      var lookupData = await proxyFetch('https://api.roblox.com/users/get-by-username?username='+encodeURIComponent(vUser));
-      if(!lookupData || lookupData.errorMessage || !lookupData.Id) throw new Error('Username not found on Roblox. Check the spelling.');
-      match = {id: lookupData.Id, name: lookupData.Username};
+  try {
+    var r = await fetch(VERIFY_FN, {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify({ username: vUser, phrase: vPhrase })
+    });
+
+    /* If function not deployed yet (404/405/500 from missing fn) */
+    if(r.status === 404 || r.status === 405) {
+      banner.style.display = 'block';
+      throw new Error('Edge function not deployed yet — see setup instructions below.');
     }
 
-    var profile = await proxyFetch('https://users.roblox.com/v1/users/'+match.id);
-    var bio = (profile.description||'').toLowerCase();
-    if(bio.indexOf(vPhrase.toLowerCase()) === -1) throw new Error("Code not found in your bio. Make sure you saved — or hit 'Get New Code' for a fresh one.");
+    var data = await r.json();
+    if(!r.ok) throw new Error(data.error || 'Verification failed.');
 
-    me = {user: profile.displayName||profile.name||match.name, uid: String(match.id), ts: Date.now()};
-    saveUser(me); updateNav();
-    document.getElementById('v-okmsg').textContent = 'Welcome, '+me.user+'!';
+    me = { user: data.user, uid: String(data.uid), ts: Date.now() };
+    saveUser(me);
+    updateNav();
+    document.getElementById('v-okmsg').textContent = 'Welcome, ' + me.user + '!';
     vstep(3);
-    toast('Verified — welcome to TradeVault','ok');
+    toast('Verified — welcome to TradeVault', 'ok');
+
   } catch(e) {
-    err.textContent = e.message||'Verification failed. Try again.';
-    err.style.display='block';
+    err.textContent = e.message || 'Verification failed. Try again.';
+    err.style.display = 'block';
   }
-  btn.disabled=false;
-  btn.innerHTML='<svg class="ico" style="width:14px;height:14px;margin-right:6px"><use href="#i-shield"/></svg>Verify Bio';
+
+  btn.disabled = false;
+  btn.innerHTML = '<svg class="ico" style="width:14px;height:14px;margin-right:6px"><use href="#i-shield"/></svg>Verify Bio';
 }
 
 function v_newcode() {
   vPhrase = genPhrase();
   document.getElementById('v-phrase').textContent = vPhrase;
-  document.getElementById('v-wc').textContent = vPhrase.trim().split(/\s+/).length + ' words';
+  document.getElementById('v-wc').textContent = '7 words';
   var btn = document.getElementById('v-cpbtn');
-  btn.innerHTML='<svg class="ico" style="width:12px;height:12px"><use href="#i-copy"/></svg> Copy';
+  btn.innerHTML = '<svg class="ico" style="width:12px;height:12px"><use href="#i-copy"/></svg> Copy';
   btn.classList.remove('ok');
-  document.getElementById('ve2').style.display='none';
-  toast('New code generated','ok');
+  document.getElementById('ve2').style.display = 'none';
+  document.getElementById('setup-banner').style.display = 'none';
+  toast('New code generated', 'ok');
 }
+
 
 /* ══ POST TRADE ══ */
 function openPost() {
