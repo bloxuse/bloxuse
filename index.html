@@ -799,6 +799,807 @@ async function loadTrades() {
   if(document.getElementById('p-in').style.display!=='none') renderProfile();
 }
 
+/* ══════════════════════════════════════════<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeVault — Roblox Trading</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:         #07070a;
+  --bg2:        #0b0b0f;
+  --bg3:        #0f0f14;
+  --card:       #111118;
+  --card2:      #17171f;
+  --card3:      #1e1e28;
+  --ln:         rgba(255,255,255,0.055);
+  --ln2:        rgba(255,255,255,0.09);
+  --ln3:        rgba(255,255,255,0.14);
+  --t:          #eeeaf8;
+  --t2:         #9996ab;
+  --t3:         #58566a;
+  --t4:         #34324a;
+  --blue:       #5b8ef5;
+  --blue2:      #84b0ff;
+  --blue-bg:    rgba(91,142,245,0.09);
+  --blue-ln:    rgba(91,142,245,0.28);
+  --green:      #26d98a;
+  --green-bg:   rgba(38,217,138,0.08);
+  --green-ln:   rgba(38,217,138,0.22);
+  --red:        #f5504a;
+  --red-bg:     rgba(245,80,74,0.08);
+  --red-ln:     rgba(245,80,74,0.22);
+  --gold:       #f0b429;
+  --gold-bg:    rgba(240,180,41,0.08);
+  --gold-ln:    rgba(240,180,41,0.22);
+  --sans:       'Outfit', sans-serif;
+  --mono:       'JetBrains Mono', monospace;
+  --r:          8px;
+  --r2:         12px;
+  --r3:         16px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--t);
+  font-family: var(--sans); min-height: 100vh;
+  overflow-x: hidden; -webkit-font-smoothing: antialiased;
+}
+
+body::after {
+  content: ''; position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 300px; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at center top, rgba(91,142,245,0.055) 0%, transparent 65%);
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-thumb { background: var(--card3); border-radius: 3px; }
+
+/* ════════════════ NAV ════════════════ */
+#nav {
+  position: fixed; inset: 0 0 auto 0; height: 56px; z-index: 300;
+  background: rgba(7,7,10,0.9); backdrop-filter: blur(24px) saturate(150%);
+  border-bottom: 1px solid var(--ln);
+  display: flex; align-items: center; padding: 0 18px; gap: 0;
+}
+.n-brand {
+  display: flex; align-items: center; gap: 9px;
+  text-decoration: none; margin-right: 24px; flex-shrink: 0;
+}
+.n-mark {
+  width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+  background: linear-gradient(140deg, #5b8ef5, #3361d8);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 900; color: #fff;
+  box-shadow: 0 0 18px rgba(91,142,245,0.3);
+}
+.n-word { font-size: 15px; font-weight: 800; letter-spacing: -0.3px; color: var(--t); }
+.n-word em { color: var(--blue2); font-style: normal; }
+.n-tabs { display: flex; align-items: center; gap: 1px; flex: 1; }
+.n-tab {
+  padding: 5px 13px; border-radius: 7px; font-size: 13px; font-weight: 500;
+  color: var(--t3); cursor: pointer; border: none; background: none;
+  font-family: var(--sans); transition: all 0.12s;
+}
+.n-tab:hover { color: var(--t2); background: var(--card); }
+.n-tab.on { color: var(--t); background: var(--card2); font-weight: 600; }
+.n-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.n-signin {
+  display: flex; align-items: center; gap: 7px; padding: 7px 15px;
+  border-radius: var(--r); background: var(--card2); border: 1px solid var(--ln2);
+  color: var(--t); font-family: var(--sans); font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.12s;
+}
+.n-signin:hover { border-color: var(--blue-ln); background: var(--blue-bg); color: var(--blue2); }
+.n-user {
+  display: flex; align-items: center; gap: 8px; padding: 4px 13px 4px 4px;
+  background: var(--card2); border: 1px solid var(--ln2); border-radius: 40px;
+  cursor: pointer; transition: border-color 0.12s; font-size: 13px; font-weight: 600;
+}
+.n-user:hover { border-color: var(--ln3); }
+.n-avi {
+  width: 26px; height: 26px; border-radius: 50%; background: var(--card3);
+  overflow: hidden; flex-shrink: 0; display: flex; align-items: center;
+  justify-content: center; font-size: 11px; font-weight: 800; color: var(--blue2);
+}
+.n-avi img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ════════════════ APP / VIEWS ════════════════ */
+#app { padding-top: 56px; position: relative; z-index: 1; }
+.view { display: none; }
+.view.on { display: flex; min-height: calc(100vh - 56px); }
+
+/* ════════════════ SIDEBAR ════════════════ */
+.sidebar {
+  width: 216px; flex-shrink: 0; border-right: 1px solid var(--ln);
+  background: var(--bg2); padding: 16px 10px;
+  position: sticky; top: 56px; height: calc(100vh - 56px); overflow-y: auto;
+}
+.sb-head {
+  font-size: 9px; font-weight: 700; color: var(--t4); text-transform: uppercase;
+  letter-spacing: 1.1px; padding: 0 8px; margin-bottom: 5px; font-family: var(--mono);
+}
+.sb-btn {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 7px 9px; border-radius: var(--r); border: none; background: none;
+  color: var(--t3); font-family: var(--sans); font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all 0.12s; text-align: left; margin-bottom: 1px;
+}
+.sb-btn:hover { background: var(--card); color: var(--t2); }
+.sb-btn.on { background: var(--card2); color: var(--t); font-weight: 600; }
+.sb-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.sb-count {
+  margin-left: auto; font-size: 10px; font-family: var(--mono);
+  background: var(--card3); color: var(--t3); padding: 1px 6px; border-radius: 20px;
+}
+.sb-sep { height: 1px; background: var(--ln); margin: 10px 4px; }
+.sb-post {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  width: 100%; padding: 9px; border-radius: var(--r); margin-bottom: 14px;
+  background: var(--blue-bg); border: 1px solid var(--blue-ln); color: var(--blue2);
+  font-family: var(--sans); font-size: 12px; font-weight: 700; cursor: pointer;
+  transition: all 0.12s;
+}
+.sb-post:hover { background: rgba(91,142,245,0.16); }
+
+/* ════════════════ MAIN ════════════════ */
+.main { flex: 1; padding: 22px 22px 60px; min-width: 0; }
+
+/* ════════════════ TOP BAR ════════════════ */
+.top-bar {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 16px; margin-bottom: 16px; flex-wrap: wrap;
+}
+.top-title { font-size: 20px; font-weight: 800; letter-spacing: -0.4px; }
+.top-title em { color: var(--blue2); font-style: normal; }
+.top-sub { font-size: 11px; color: var(--t3); font-family: var(--mono); margin-top: 3px; }
+.top-meta { font-size: 11px; color: var(--t3); font-family: var(--mono); }
+
+/* ════════════════ TOOLBAR ════════════════ */
+.toolbar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  background: var(--card); border: 1px solid var(--ln);
+  border-radius: var(--r2); padding: 9px 12px; margin-bottom: 16px;
+}
+.s-wrap { position: relative; flex: 1; min-width: 160px; }
+.s-ico { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--t3); font-size: 11px; pointer-events: none; }
+.s-inp {
+  width: 100%; background: var(--bg3); border: 1px solid var(--ln);
+  border-radius: 7px; padding: 7px 10px 7px 30px; color: var(--t);
+  font-family: var(--mono); font-size: 11px; outline: none; transition: border-color 0.12s;
+}
+.s-inp:focus { border-color: var(--ln2); }
+.s-inp::placeholder { color: var(--t4); }
+.fsel {
+  background: var(--bg3); border: 1px solid var(--ln); border-radius: 7px;
+  padding: 7px 10px; color: var(--t2); font-family: var(--mono); font-size: 11px; outline: none;
+}
+
+/* ════════════════ TRADE GRID ════════════════ */
+.tgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 9px; }
+
+/* ════════════════ TRADE CARD ════════════════ */
+.tc {
+  background: var(--card); border: 1px solid var(--ln);
+  border-radius: var(--r2); overflow: hidden;
+  cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s, transform 0.12s;
+  animation: ci 0.22s ease both;
+}
+@keyframes ci { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+.tc:hover { border-color: var(--ln2); box-shadow: 0 4px 28px rgba(0,0,0,0.55); transform: translateY(-1px); }
+
+.tc-hd {
+  display: flex; align-items: center; gap: 9px;
+  padding: 11px 13px 10px; border-bottom: 1px solid var(--ln);
+}
+.tc-avi { width: 30px; height: 30px; border-radius: 50%; background: var(--card3); overflow: hidden; flex-shrink: 0; }
+.tc-avi img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tc-uname { font-size: 12px; font-weight: 700; line-height: 1.3; }
+.tc-when { font-size: 10px; color: var(--t3); font-family: var(--mono); }
+.tc-badge {
+  margin-left: auto; font-size: 9px; font-weight: 700;
+  padding: 2px 8px; border-radius: 20px; border: 1px solid; letter-spacing: 0.2px;
+  flex-shrink: 0; font-family: var(--mono);
+}
+
+.tc-bd { padding: 11px 13px; }
+.tc-lbl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.9px; color: var(--t3); margin-bottom: 5px; font-family: var(--mono); }
+.tc-items { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 9px; }
+.tc-item {
+  font-size: 10px; font-family: var(--mono); padding: 3px 8px; border-radius: 5px;
+  background: var(--bg3); border: 1px solid var(--ln); color: var(--t2);
+  max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.tc-mid { display: flex; align-items: center; gap: 8px; margin: 6px 0; color: var(--t4); font-size: 11px; }
+.tc-mid::before, .tc-mid::after { content: ''; flex: 1; height: 1px; background: var(--ln); }
+
+.tc-ft {
+  padding: 8px 13px 11px;
+  display: flex; align-items: center; gap: 5px;
+}
+.tc-type {
+  font-size: 10px; font-family: var(--mono); font-weight: 600;
+  padding: 3px 8px; border-radius: 4px;
+}
+.tc-type.tr { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-ln); }
+.tc-type.lf { background: var(--gold-bg); color: var(--gold); border: 1px solid var(--gold-ln); }
+.tc-note { font-size: 10px; color: var(--t3); font-family: var(--mono); max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tc-cta {
+  margin-left: auto; padding: 5px 13px; border-radius: 6px;
+  background: var(--blue); color: #fff; border: none;
+  font-family: var(--sans); font-size: 11px; font-weight: 700;
+  cursor: pointer; transition: background 0.12s; flex-shrink: 0;
+}
+.tc-cta:hover { background: var(--blue2); }
+
+/* ════════════════ EMPTY ════════════════ */
+.empty {
+  grid-column: 1/-1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 80px 20px;
+  color: var(--t3); text-align: center; gap: 10px;
+}
+.empty-ico { font-size: 32px; color: var(--t4); }
+.empty h3 { font-size: 14px; font-weight: 700; color: var(--t2); }
+.empty p { font-size: 11px; font-family: var(--mono); color: var(--t3); line-height: 2; }
+
+/* ════════════════ VALUE GRID ════════════════ */
+.vgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px; }
+.vc {
+  background: var(--card); border: 1px solid var(--ln);
+  border-radius: var(--r2); padding: 14px 15px;
+  transition: border-color 0.12s;
+  animation: ci 0.22s ease both;
+}
+.vc:hover { border-color: var(--ln2); }
+.vc-game { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; font-family: var(--mono); margin-bottom: 5px; }
+.vc-name { font-size: 13px; font-weight: 700; margin-bottom: 10px; line-height: 1.3; }
+.vc-tier { font-size: 9px; font-family: var(--mono); color: var(--t3); margin-bottom: 6px; letter-spacing: 0.5px; }
+.vc-row { display: flex; align-items: baseline; gap: 7px; }
+.vc-val { font-size: 21px; font-weight: 800; font-family: var(--mono); }
+.vc-chg { font-size: 10px; font-family: var(--mono); font-weight: 600; }
+.vc-chg.up { color: var(--green); }
+.vc-chg.dn { color: var(--red); }
+.vc-bar { height: 2px; background: var(--ln); border-radius: 2px; margin-top: 9px; overflow: hidden; }
+.vc-fill { height: 100%; border-radius: 2px; }
+.vc-src { font-size: 9px; color: var(--t4); font-family: var(--mono); margin-top: 6px; }
+
+/* ════════════════ PROFILE ════════════════ */
+.profile-view { display: block !important; }
+.p-banner {
+  height: 110px; border-radius: var(--r2); margin-bottom: -38px;
+  background: linear-gradient(135deg, #0b1730 0%, #07070a 50%, #0a150b 100%);
+  border: 1px solid var(--ln); position: relative; overflow: hidden;
+}
+.p-banner::before {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(60deg, transparent, transparent 50px, rgba(91,142,245,0.025) 50px, rgba(91,142,245,0.025) 51px);
+}
+.p-row {
+  display: flex; align-items: flex-end; gap: 14px; padding: 0 18px 18px; flex-wrap: wrap;
+}
+.p-avi {
+  width: 68px; height: 68px; border-radius: 50%;
+  border: 3px solid var(--bg); background: var(--card3); overflow: hidden; position: relative; z-index: 1;
+}
+.p-avi img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.p-name { font-size: 20px; font-weight: 800; letter-spacing: -0.4px; }
+.p-handle { font-size: 11px; color: var(--t3); font-family: var(--mono); margin-top: 2px; }
+.p-stats { display: flex; gap: 24px; margin-top: 5px; }
+.ps-n { font-size: 18px; font-weight: 800; font-family: var(--mono); }
+.ps-l { font-size: 9px; color: var(--t3); text-transform: uppercase; letter-spacing: 0.6px; }
+.p-actions { margin-left: auto; display: flex; gap: 8px; padding-bottom: 18px; }
+.btn-logout {
+  padding: 7px 14px; border-radius: var(--r); border: 1px solid var(--ln2);
+  background: none; color: var(--t3); font-family: var(--sans);
+  font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.12s;
+}
+.btn-logout:hover { border-color: var(--red-ln); color: var(--red); background: var(--red-bg); }
+
+/* ════════════════ MODAL ════════════════ */
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+  z-index: 800; display: none; align-items: center; justify-content: center;
+  padding: 20px; backdrop-filter: blur(18px) saturate(120%);
+}
+.overlay.open { display: flex; }
+.modal {
+  background: var(--card); border: 1px solid var(--ln2);
+  border-radius: var(--r3); width: 100%; max-width: 488px;
+  max-height: 92vh; overflow-y: auto;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  animation: mi 0.2s cubic-bezier(0.2,0,0,1);
+}
+.modal::-webkit-scrollbar { width: 4px; }
+.modal::-webkit-scrollbar-thumb { background: var(--card3); border-radius: 2px; }
+@keyframes mi { from{opacity:0;transform:scale(0.96) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+
+.mhd { display: flex; align-items: flex-start; justify-content: space-between; padding: 20px 20px 0; }
+.mh-t { font-size: 17px; font-weight: 800; letter-spacing: -0.3px; }
+.mh-s { font-size: 11px; color: var(--t3); font-family: var(--mono); margin-top: 3px; }
+.mc {
+  width: 28px; height: 28px; border-radius: 7px; border: 1px solid var(--ln); background: var(--card2);
+  color: var(--t3); font-size: 12px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.12s; flex-shrink: 0;
+}
+.mc:hover { color: var(--t); border-color: var(--ln2); }
+.mb { padding: 16px 20px 20px; }
+.mdiv { height: 1px; background: var(--ln); margin: 14px 0; }
+
+/* ════════════════ FORM ════════════════ */
+.fg { margin-bottom: 13px; }
+.fl { display: block; font-size: 10px; font-weight: 700; color: var(--t3); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; font-family: var(--mono); }
+.fi {
+  width: 100%; background: var(--bg3); border: 1px solid var(--ln);
+  border-radius: var(--r); padding: 9px 12px; color: var(--t);
+  font-family: var(--mono); font-size: 12px; outline: none; transition: border-color 0.12s;
+}
+.fi:focus { border-color: var(--blue-ln); }
+.fi.err { border-color: var(--red-ln); }
+.fi::placeholder { color: var(--t4); }
+textarea.fi { resize: vertical; min-height: 70px; }
+.ferr { font-size: 10px; color: var(--red); font-family: var(--mono); margin-top: 4px; }
+
+.gg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.gopt {
+  display: flex; align-items: center; gap: 7px; padding: 9px 11px;
+  border-radius: var(--r); border: 1px solid var(--ln); background: var(--bg3);
+  cursor: pointer; transition: all 0.12s; font-size: 12px; font-weight: 600;
+}
+.gopt:hover { border-color: var(--ln2); }
+.gopt.on { border-color: var(--blue-ln); background: var(--blue-bg); color: var(--blue2); }
+.gdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+.trow { display: flex; gap: 6px; }
+.topt {
+  flex: 1; padding: 9px; border-radius: var(--r); border: 1px solid var(--ln);
+  background: var(--bg3); cursor: pointer; transition: all 0.12s;
+  font-size: 12px; font-weight: 600; text-align: center;
+}
+.topt:hover { border-color: var(--ln2); }
+.topt.on { border-color: var(--green-ln); background: var(--green-bg); color: var(--green); }
+
+.irow { display: flex; gap: 5px; margin-bottom: 6px; }
+.irow .fi { flex: 1; }
+.iadd {
+  width: 36px; height: 36px; border-radius: var(--r); border: 1px solid var(--ln);
+  background: var(--bg3); color: var(--t2); font-size: 17px; cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; transition: all 0.12s;
+}
+.iadd:hover { border-color: var(--green-ln); color: var(--green); }
+.ichips { display: flex; flex-wrap: wrap; gap: 4px; min-height: 22px; margin-bottom: 8px; }
+.ich {
+  display: flex; align-items: center; gap: 5px; padding: 3px 9px;
+  background: var(--card2); border: 1px solid var(--ln); border-radius: 4px;
+  font-size: 10px; font-family: var(--mono); color: var(--t2);
+}
+.ich-x { background: none; border: none; color: var(--t3); cursor: pointer; font-size: 12px; padding: 0; line-height: 1; }
+.ich-x:hover { color: var(--red); }
+
+.btn-p {
+  width: 100%; padding: 11px; border-radius: var(--r); background: var(--blue);
+  color: #fff; border: none; font-family: var(--sans); font-size: 13px;
+  font-weight: 700; cursor: pointer; transition: all 0.12s;
+}
+.btn-p:hover { background: var(--blue2); }
+.btn-p:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-s {
+  width: 100%; padding: 10px; border-radius: var(--r); margin-top: 6px;
+  background: none; border: 1px solid var(--ln); color: var(--t3);
+  font-family: var(--sans); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.12s;
+}
+.btn-s:hover { border-color: var(--ln2); color: var(--t2); }
+
+/* ════════════════ VERIFY STEPS ════════════════ */
+.vstep { display: none; }
+.vstep.on { display: block; }
+.step-pip {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  background: var(--blue-bg); border: 1px solid var(--blue-ln);
+  color: var(--blue2); font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
+}
+.phrase-box {
+  background: var(--bg); border: 1px solid var(--ln2); border-radius: var(--r);
+  padding: 14px; margin-bottom: 12px;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.phrase-txt {
+  font-family: var(--mono); font-size: 13px; font-weight: 500;
+  color: var(--blue2); line-height: 1.8; flex: 1; letter-spacing: 0.2px;
+  word-break: break-word;
+}
+.phrase-word-count {
+  font-size: 9px; color: var(--t4); font-family: var(--mono);
+  margin-top: 4px; text-align: right;
+}
+.cp-btn {
+  padding: 6px 13px; border-radius: 6px; background: var(--card2);
+  border: 1px solid var(--ln2); color: var(--t2); font-family: var(--mono);
+  font-size: 10px; cursor: pointer; transition: all 0.12s; white-space: nowrap; flex-shrink: 0;
+}
+.cp-btn:hover { border-color: var(--ln3); color: var(--t); }
+.cp-btn.ok { color: var(--green); border-color: var(--green-ln); background: var(--green-bg); }
+.how-to {
+  background: var(--bg3); border: 1px solid var(--ln); border-radius: var(--r);
+  padding: 12px 13px; font-size: 11px; font-family: var(--mono);
+  color: var(--t3); line-height: 2.2; margin-bottom: 12px;
+}
+.how-to strong { color: var(--t); }
+.ok-center { text-align: center; padding: 16px 0 8px; }
+.ok-ico { font-size: 40px; color: var(--green); margin-bottom: 10px; }
+.ok-title { font-size: 19px; font-weight: 800; margin-bottom: 5px; }
+.ok-sub { font-size: 11px; color: var(--t3); font-family: var(--mono); margin-bottom: 20px; }
+
+/* ════════════════ DETAIL ════════════════ */
+.dt-hd { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--ln); }
+.dt-avi { width: 48px; height: 48px; border-radius: 50%; background: var(--card3); overflow: hidden; flex-shrink: 0; }
+.dt-avi img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.dt-name { font-size: 17px; font-weight: 800; }
+.dt-meta { font-size: 10px; color: var(--t3); font-family: var(--mono); margin-top: 3px; }
+.dt-cols { display: grid; grid-template-columns: 1fr 24px 1fr; align-items: center; gap: 8px; margin-bottom: 14px; }
+.dt-col { background: var(--bg3); border: 1px solid var(--ln); border-radius: var(--r); padding: 11px 12px; }
+.dt-col-lbl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; font-family: var(--mono); color: var(--t3); margin-bottom: 7px; }
+.dt-col-item { font-size: 11px; font-family: var(--mono); color: var(--t2); padding: 4px 0; border-bottom: 1px solid var(--ln); }
+.dt-col-item:last-child { border-bottom: none; }
+.dt-arr { color: var(--t3); font-size: 14px; text-align: center; }
+.contact-box { background: var(--bg3); border: 1px solid var(--ln); border-radius: var(--r); padding: 12px 13px; font-size: 11px; font-family: var(--mono); color: var(--t3); line-height: 2.1; margin-bottom: 12px; }
+.contact-box strong { color: var(--t); }
+
+/* ════════════════ TOAST ════════════════ */
+#toast {
+  position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%) translateY(56px);
+  background: var(--card2); border: 1px solid var(--ln2);
+  border-radius: var(--r); padding: 8px 16px; font-size: 11px; font-family: var(--mono);
+  z-index: 9999; transition: transform 0.22s cubic-bezier(0.2,0,0,1);
+  white-space: nowrap; pointer-events: none;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+#toast.show { transform: translateX(-50%) translateY(0); }
+#toast.ok  { color: var(--green); border-color: var(--green-ln); }
+#toast.bad { color: var(--red);   border-color: var(--red-ln); }
+
+/* misc */
+.spin { display: inline-block; width: 13px; height: 13px; border: 2px solid var(--ln); border-top-color: var(--blue); border-radius: 50%; animation: sp 0.6s linear infinite; vertical-align: middle; }
+@keyframes sp { to { transform: rotate(360deg); } }
+</style>
+
+<style>
+.ico { display:inline-block; width:1em; height:1em; vertical-align:-0.15em; flex-shrink:0; overflow:visible; }
+</style>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-grid"   viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+  <symbol id="i-chart"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></symbol>
+  <symbol id="i-user"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></symbol>
+  <symbol id="i-login"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></symbol>
+  <symbol id="i-plus"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></symbol>
+  <symbol id="i-swap"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+  <symbol id="i-x"      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-ar"     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+  <symbol id="i-al"     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol>
+  <symbol id="i-ad"     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></symbol>
+  <symbol id="i-copy"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-checkc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
+  <symbol id="i-check"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-send"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+  <symbol id="i-trash"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></symbol>
+  <symbol id="i-ext"    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></symbol>
+  <symbol id="i-list"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></symbol>
+  <symbol id="i-clip"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></symbol>
+  <symbol id="i-cu"     viewBox="0 0 24 24" fill="currentColor"><path d="M12 8l-6 7h12z"/></symbol>
+  <symbol id="i-cd"     viewBox="0 0 24 24" fill="currentColor"><path d="M12 16l6-7H6z"/></symbol>
+</svg>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="n-brand" href="#" onclick="goto('trades');return false">
+    <div class="n-mark">TV</div>
+    <span class="n-word">Trade<em>Vault</em></span>
+  </a>
+  <div class="n-tabs">
+    <button class="n-tab on" id="nt-trades"  onclick="goto('trades')">
+      <svg class="ico" style="width:13px;height:13px;margin-right:5px" aria-hidden="true"><use href="#i-grid"/></svg>Trade Board
+    </button>
+    <button class="n-tab"     id="nt-values"  onclick="goto('values')">
+      <svg class="ico" style="width:13px;height:13px;margin-right:5px" aria-hidden="true"><use href="#i-chart"/></svg>Value Guide
+    </button>
+    <button class="n-tab"     id="nt-profile" onclick="goto('profile')">
+      <svg class="ico" style="width:13px;height:13px;margin-right:5px" aria-hidden="true"><use href="#i-user"/></svg>Profile
+    </button>
+  </div>
+  <div class="n-right" id="n-right">
+    <button class="n-signin" onclick="openVerify()">
+      <svg class="ico" style="width:14px;height:14px;color:var(--blue2)" aria-hidden="true"><use href="#i-login"/></svg>Sign in with Roblox
+    </button>
+  </div>
+</nav>
+
+<div id="app">
+
+<!-- ══ TRADE BOARD ══ -->
+<div class="view on" id="view-trades">
+  <div class="sidebar">
+    <button class="sb-post" onclick="openPost()"><svg class="ico" style="width:12px;height:12px" aria-hidden="true"><use href="#i-plus"/></svg>Post Trade</button>
+    <div class="sb-head">Game</div>
+    <button class="sb-btn on" id="sbg-all"      onclick="setGame('all',this)"><span class="sb-dot" style="background:var(--t3)"></span>All Games<span class="sb-count" id="cnt-all">0</span></button>
+    <button class="sb-btn"    id="sbg-mm2"      onclick="setGame('mm2',this)"><span class="sb-dot" style="background:#ef4444"></span>Murder Mystery 2<span class="sb-count" id="cnt-mm2">0</span></button>
+    <button class="sb-btn"    id="sbg-adoptme"  onclick="setGame('adoptme',this)"><span class="sb-dot" style="background:#f472b6"></span>Adopt Me!<span class="sb-count" id="cnt-adoptme">0</span></button>
+    <button class="sb-btn"    id="sbg-sharp"    onclick="setGame('sharp',this)"><span class="sb-dot" style="background:#f59e0b"></span>Sharp!<span class="sb-count" id="cnt-sharp">0</span></button>
+    <button class="sb-btn"    id="sbg-brainrot" onclick="setGame('brainrot',this)"><span class="sb-dot" style="background:#a78bfa"></span>Steal a Brainrot<span class="sb-count" id="cnt-brainrot">0</span></button>
+    <button class="sb-btn"    id="sbg-garden"   onclick="setGame('garden',this)"><span class="sb-dot" style="background:#34d399"></span>Grow a Garden<span class="sb-count" id="cnt-garden">0</span></button>
+    <div class="sb-sep"></div>
+    <div class="sb-head">Type</div>
+    <button class="sb-btn on" id="sbt-all"     onclick="setType('all',this)"><svg class="ico" style="width:12px;height:12px;flex-shrink:0" aria-hidden="true"><use href="#i-layers"/></svg>All</button>
+    <button class="sb-btn"    id="sbt-trading" onclick="setType('trading',this)"><svg class="ico" style="width:12px;height:12px;flex-shrink:0" aria-hidden="true"><use href="#i-swap"/></svg>Trading</button>
+    <button class="sb-btn"    id="sbt-looking" onclick="setType('looking',this)"><svg class="ico" style="width:12px;height:12px;flex-shrink:0" aria-hidden="true"><use href="#i-search"/></svg>Looking For</button>
+  </div>
+  <div class="main">
+    <div class="top-bar">
+      <div>
+        <div class="top-title" id="board-h">Trade Board <em id="board-game-tag">· All Games</em></div>
+        <div class="top-sub">verified traders only &middot; peer-to-peer &middot; scam-free &middot; no bots</div>
+      </div>
+      <div class="top-meta" id="board-meta">0 listings</div>
+    </div>
+    <div class="toolbar">
+      <div class="s-wrap">
+        <svg class="ico s-ico" aria-hidden="true"><use href="#i-search"/></svg>
+        <input class="s-inp" id="q" placeholder="Search items, traders…" oninput="render()">
+      </div>
+      <select class="fsel" id="sort" onchange="render()">
+        <option value="new">Newest</option>
+        <option value="old">Oldest</option>
+      </select>
+    </div>
+    <div class="tgrid" id="board"></div>
+  </div>
+</div>
+
+<!-- ══ VALUE GUIDE ══ -->
+<div class="view" id="view-values">
+  <div class="sidebar">
+    <div class="sb-head">Game</div>
+    <button class="sb-btn on" onclick="setVG('all',this)"><span class="sb-dot" style="background:var(--t3)"></span>All</button>
+    <button class="sb-btn"    onclick="setVG('mm2',this)"><span class="sb-dot" style="background:#ef4444"></span>Murder Mystery 2</button>
+    <button class="sb-btn"    onclick="setVG('adoptme',this)"><span class="sb-dot" style="background:#f472b6"></span>Adopt Me!</button>
+    <button class="sb-btn"    onclick="setVG('sharp',this)"><span class="sb-dot" style="background:#f59e0b"></span>Sharp!</button>
+    <button class="sb-btn"    onclick="setVG('brainrot',this)"><span class="sb-dot" style="background:#a78bfa"></span>Steal a Brainrot</button>
+    <button class="sb-btn"    onclick="setVG('garden',this)"><span class="sb-dot" style="background:#34d399"></span>Grow a Garden</button>
+    <div class="sb-sep"></div>
+    <div style="font-size:9px;color:var(--t4);font-family:var(--mono);padding:0 8px;line-height:1.8">
+      Sources:<br>
+      MM2 → supremevalues.com<br>
+      AM → elvebredd.com<br>
+      Sharp → msvalues.com<br>
+      SAB → moonvalues.com<br>
+      GaG → growagarden.gg
+    </div>
+  </div>
+  <div class="main">
+    <div class="top-bar">
+      <div>
+        <div class="top-title">Value Guide <em id="vg-sub">· All Items</em></div>
+        <div class="top-sub">community-tracked · updated regularly · source-verified</div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="s-wrap">
+        <svg class="ico s-ico" aria-hidden="true"><use href="#i-search"/></svg>
+        <input class="s-inp" id="vq" placeholder="Search items…" oninput="renderVG()">
+      </div>
+    </div>
+    <div class="vgrid" id="vboard"></div>
+  </div>
+</div>
+
+<!-- ══ PROFILE ══ -->
+<div class="view profile-view" id="view-profile">
+  <div class="main" style="max-width:880px;margin:0 auto">
+    <div id="p-out">
+      <div class="empty" style="min-height:calc(100vh - 140px)">
+        <div class="empty-ico"><svg class="ico" style="width:36px;height:36px" aria-hidden="true"><use href="#i-user"/></svg></div>
+        <h3>Not signed in</h3>
+        <p>Verify your Roblox account to view your<br>profile and manage your listings.</p>
+        <button class="btn-p" style="width:auto;padding:10px 28px;margin-top:6px" onclick="openVerify()">
+          <svg class="ico" style="width:14px;height:14px;margin-right:6px" aria-hidden="true"><use href="#i-login"/></svg>Sign In with Roblox
+        </button>
+      </div>
+    </div>
+    <div id="p-in" style="display:none">
+      <div class="p-banner"></div>
+      <div class="p-row">
+        <div class="p-avi"><img id="p-img" src="" alt=""></div>
+        <div>
+          <div class="p-name" id="p-name"></div>
+          <div class="p-handle" id="p-handle"></div>
+          <div class="p-stats">
+            <div><div class="ps-n" id="p-cnt">0</div><div class="ps-l">Listings</div></div>
+            <div><div class="ps-n" id="p-since">—</div><div class="ps-l">Since</div></div>
+          </div>
+        </div>
+        <div class="p-actions">
+          <button class="btn-logout" onclick="doLogout()"><svg class="ico" style="width:14px;height:14px" aria-hidden="true"><use href="#i-logout"/></svg> Log Out</button>
+        </div>
+      </div>
+      <div style="margin-top:24px">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.9px;color:var(--t3);margin-bottom:12px;font-family:var(--mono)">Your Listings</div>
+        <div class="tgrid" id="my-board"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<!-- ══ VERIFY MODAL ══ -->
+<div class="overlay" id="mo-v">
+  <div class="modal">
+    <div class="mhd">
+      <div><div class="mh-t">Sign in with Roblox</div><div class="mh-s">no password &middot; no signup &middot; verify via bio</div></div>
+      <button class="mc" onclick="close_('mo-v')"><svg class="ico" style="width:12px;height:12px" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="mb">
+      <!-- step 1 -->
+      <div class="vstep on" id="vs1">
+        <div class="step-pip">1</div>
+        <div class="fg">
+          <label class="fl">Roblox Username</label>
+          <input class="fi" id="vu" placeholder="e.g. Builderman" autocomplete="off">
+          <div class="ferr" id="ve1" style="display:none"></div>
+        </div>
+        <button class="btn-p" onclick="v1()">Continue <svg class="ico" style="width:12px;height:12px" aria-hidden="true"><use href="#i-ar"/></svg></button>
+      </div>
+      <!-- step 2 -->
+      <div class="vstep" id="vs2">
+        <div class="step-pip">2</div>
+        <label class="fl" style="margin-bottom:7px">Copy this phrase into your Roblox bio</label>
+        <div class="phrase-box">
+          <div style="flex:1">
+            <span class="phrase-txt" id="v-phrase">—</span>
+            <div class="phrase-word-count" id="v-wc">7 words</div>
+          </div>
+          <button class="cp-btn" id="v-cpbtn" onclick="v_copy()"><svg class="ico" style="width:12px;height:12px" aria-hidden="true"><use href="#i-copy"/></svg> Copy</button>
+        </div>
+        <div class="how-to">
+          1. Go to <strong>roblox.com</strong> and open your profile settings<br>
+          2. Paste the phrase above into your <strong>bio / About section</strong><br>
+          3. Save, then click <strong>Verify</strong> below<br>
+          <span style="color:var(--t4)">You can remove it from your bio after verifying.</span>
+        </div>
+        <button class="btn-p" id="v-verifybtn" onclick="v2()">
+          <svg class="ico" style="width:14px;height:14px;margin-right:6px" aria-hidden="true"><use href="#i-shield"/></svg>Verify Bio
+        </button>
+        <button class="btn-s" style="margin-top:6px" onclick="v_newcode()"><svg class="ico" style="width:12px;height:12px;margin-right:5px" aria-hidden="true"><use href="#i-plus"/></svg>Get New Code</button>
+        <button class="btn-s" onclick="vstep(1)"><svg class="ico" style="width:12px;height:12px;margin-right:5px" aria-hidden="true"><use href="#i-al"/></svg>Back</button>
+        <div class="ferr" id="ve2" style="display:none;margin-top:8px"></div>
+      </div>
+      <!-- step 3 -->
+      <div class="vstep" id="vs3">
+        <div class="ok-center">
+          <div class="ok-ico"><svg class="ico" style="width:44px;height:44px" aria-hidden="true"><use href="#i-checkc"/></svg></div>
+          <div class="ok-title">Verified!</div>
+          <div class="ok-sub" id="v-okmsg">Welcome to TradeVault.</div>
+          <button class="btn-p" style="max-width:220px;margin:0 auto" onclick="close_('mo-v')">
+            Enter TradeVault <svg class="ico" style="width:12px;height:12px" aria-hidden="true"><use href="#i-ar"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ POST TRADE MODAL ══ -->
+<div class="overlay" id="mo-p">
+  <div class="modal">
+    <div class="mhd">
+      <div><div class="mh-t">Post a Trade</div><div class="mh-s">visible to everyone on the board</div></div>
+      <button class="mc" onclick="close_('mo-p')"><svg class="ico" style="width:12px;height:12px" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="mb">
+      <div class="fg">
+        <label class="fl">Game</label>
+        <div class="gg" id="pg-opts">
+          <div class="gopt" onclick="selGame('mm2',this)"><span class="gdot" style="background:#ef4444"></span>Murder Mystery 2</div>
+          <div class="gopt" onclick="selGame('adoptme',this)"><span class="gdot" style="background:#f472b6"></span>Adopt Me!</div>
+          <div class="gopt" onclick="selGame('sharp',this)"><span class="gdot" style="background:#f59e0b"></span>Sharp!</div>
+          <div class="gopt" onclick="selGame('brainrot',this)"><span class="gdot" style="background:#a78bfa"></span>Steal a Brainrot</div>
+          <div class="gopt" onclick="selGame('garden',this)" style="grid-column:span 2"><span class="gdot" style="background:#34d399"></span>Grow a Garden</div>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl">Trade Type</label>
+        <div class="trow">
+          <div class="topt on" id="tt-tr" onclick="selType('trading')">
+            <svg class="ico" style="width:12px;height:12px;margin-right:5px" aria-hidden="true"><use href="#i-swap"/></svg>Trading
+          </div>
+          <div class="topt" id="tt-lf" onclick="selType('looking')">
+            <svg class="ico" style="width:12px;height:12px;margin-right:5px" aria-hidden="true"><use href="#i-search"/></svg>Looking For
+          </div>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl">Offering <span style="color:var(--t4);font-weight:400">(items you have)</span></label>
+        <div class="irow">
+          <input class="fi" id="io" placeholder="Item name…" onkeydown="if(event.key==='Enter')addItem('o')">
+          <button class="iadd" onclick="addItem('o')"><svg class="ico" style="width:13px;height:13px" aria-hidden="true"><use href="#i-plus"/></svg></button>
+        </div>
+        <div class="ichips" id="chips-o"></div>
+      </div>
+      <div class="fg">
+        <label class="fl">Looking For <span style="color:var(--t4);font-weight:400">(items you want)</span></label>
+        <div class="irow">
+          <input class="fi" id="il" placeholder="Item name…" onkeydown="if(event.key==='Enter')addItem('l')">
+          <button class="iadd" onclick="addItem('l')"><svg class="ico" style="width:13px;height:13px" aria-hidden="true"><use href="#i-plus"/></svg></button>
+        </div>
+        <div class="ichips" id="chips-l"></div>
+      </div>
+      <div class="fg">
+        <label class="fl">Note <span style="color:var(--t4);font-weight:400">(optional)</span></label>
+        <input class="fi" id="p-note" placeholder="Any extra info…">
+      </div>
+      <button class="btn-p" onclick="submitTrade()">
+        <svg class="ico" style="width:14px;height:14px;margin-right:6px" aria-hidden="true"><use href="#i-send"/></svg>Post Trade
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TRADE DETAIL MODAL ══ -->
+<div class="overlay" id="mo-d">
+  <div class="modal">
+    <div class="mhd"><div></div><button class="mc" onclick="close_('mo-d')"><svg class="ico" style="width:12px;height:12px" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div class="mb" id="detail-body"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════
+   TRADEVAULT  —  SUPABASE CONFIG
+══════════════════════════════════════════ */
+var SUPABASE_URL      = 'https://elyrtnxrxqptupelkuvd.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVseXJ0bnhyeHFwdHVwZWxrdXZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDcwMzEsImV4cCI6MjA4NzkyMzAzMX0.cT7q9lbjNF8jOyYwDot8WbmKsdo354gUcAvSTQoskzQ';
+
+var SB_HDR = {
+  'Content-Type':  'application/json',
+  'apikey':        SUPABASE_ANON_KEY,
+  'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+  'Prefer':        'return=representation'
+};
+
+async function sbFetch(path, opts) {
+  var r = await fetch(SUPABASE_URL + '/rest/v1/' + path, Object.assign({ headers: SB_HDR }, opts));
+  if(!r.ok) { var e=await r.text(); throw new Error(e); }
+  return r.status===204 ? null : r.json();
+}
+
+async function loadTrades() {
+  var data = await sbFetch('trades?select=*&order=ts.desc');
+  trades = data.map(r=>({
+    id:   r.id,
+    user: r.user,
+    uid:  r.uid,
+    game: r.game,
+    type: r.type,
+    off:  r.off  || [],
+    lf:   r.lf   || [],
+    note: r.note  || '',
+    ts:   r.ts
+  }));
+  render();
+  if(document.getElementById('p-in').style.display!=='none') renderProfile();
+}
+
 /* ══════════════════════════════════════════
    TRADEVAULT  —  STATE & CONFIG
 ══════════════════════════════════════════ */
@@ -818,89 +1619,647 @@ var GAMES = {
    Grow a Garden: growagarden.gg
 */
 var VALS = [
-  /* ── MM2 CHROMA (supremevalues.com) ── */
-  {n:'C. Traveler\'s Gun',  g:'mm2', tier:'Chroma',    v:215000, d:5000  },
-  {n:'Chroma Evergun',      g:'mm2', tier:'Chroma',    v:92000,  d:1000  },
-  {n:'Chroma Evergreen',    g:'mm2', tier:'Chroma',    v:61000,  d:1000  },
-  {n:'Chroma Bauble',       g:'mm2', tier:'Chroma',    v:49000,  d:-1000 },
-  {n:'C. Vampire\'s Gun',   g:'mm2', tier:'Chroma',    v:43000,  d:-1000 },
-  {n:'C. Constellation',    g:'mm2', tier:'Chroma',    v:40000,  d:-1000 },
-  {n:'Chroma Alienbeam',    g:'mm2', tier:'Chroma',    v:31000,  d:1000  },
-  {n:'Chroma Raygun',       g:'mm2', tier:'Chroma',    v:16000,  d:500   },
-  {n:'Chroma Blizzard',     g:'mm2', tier:'Chroma',    v:14500,  d:-500  },
-  {n:'Chroma Treat',        g:'mm2', tier:'Chroma',    v:11000,  d:0     },
-  {n:'Chroma Sunrise',      g:'mm2', tier:'Chroma',    v:11000,  d:250   },
-  {n:'Chroma Sweet',        g:'mm2', tier:'Chroma',    v:9500,   d:0     },
-  /* ── MM2 GODLY (supremevalues.com) ── */
-  {n:'Traveler\'s Gun',     g:'mm2', tier:'Godly',     v:4200,   d:-100  },
-  {n:'Evergun',             g:'mm2', tier:'Godly',     v:3550,   d:-50   },
-  {n:'Constellation',       g:'mm2', tier:'Godly',     v:3000,   d:-50   },
-  {n:'Evergreen',           g:'mm2', tier:'Godly',     v:2700,   d:-50   },
-  {n:'Turkey',              g:'mm2', tier:'Godly',     v:1825,   d:25    },
-  {n:'Vampire\'s Gun',      g:'mm2', tier:'Godly',     v:1800,   d:-25   },
-  {n:'Darkshot',            g:'mm2', tier:'Godly',     v:1060,   d:10    },
-  {n:'Darksword',           g:'mm2', tier:'Godly',     v:1040,   d:10    },
-  {n:'Alienbeam',           g:'mm2', tier:'Godly',     v:1025,   d:25    },
-  {n:'Blossom',             g:'mm2', tier:'Godly',     v:985,    d:5     },
-  {n:'Sakura',              g:'mm2', tier:'Godly',     v:975,    d:5     },
-  {n:'Bauble',              g:'mm2', tier:'Godly',     v:925,    d:25    },
-  {n:'Raygun',              g:'mm2', tier:'Godly',     v:600,    d:25    },
-  {n:'Sunrise',             g:'mm2', tier:'Godly',     v:525,    d:-25   },
-  {n:'Heart Wand',          g:'mm2', tier:'Godly',     v:325,    d:0     },
-  /* ── ADOPT ME (elvebredd.com) ── */
-  {n:'Shadow Dragon',       g:'adoptme', tier:'Legendary', v:32000, d:500  },
-  {n:'Neon Fly Ride Dragon',g:'adoptme', tier:'Legendary', v:28000, d:300  },
-  {n:'Frost Dragon',        g:'adoptme', tier:'Legendary', v:18000, d:0    },
-  {n:'Bat Dragon',          g:'adoptme', tier:'Legendary', v:15000, d:-200 },
-  {n:'Giraffe',             g:'adoptme', tier:'Legendary', v:12000, d:100  },
-  {n:'Mega Neon Unicorn',   g:'adoptme', tier:'Legendary', v:9500,  d:0    },
-  {n:'Neon Shadow Dragon',  g:'adoptme', tier:'Legendary', v:8500,  d:200  },
-  {n:'Arctic Reindeer',     g:'adoptme', tier:'Legendary', v:6000,  d:0    },
-  {n:'Frost Fury',          g:'adoptme', tier:'Legendary', v:5500,  d:-100 },
-  {n:'Neon Bat Dragon',     g:'adoptme', tier:'Legendary', v:4800,  d:0    },
-  {n:'Neon Unicorn (FR)',   g:'adoptme', tier:'Legendary', v:3200,  d:50   },
-  {n:'Unicorn (FR)',        g:'adoptme', tier:'Ultra-Rare', v:1400,  d:0   },
-  {n:'Dragon (FR)',         g:'adoptme', tier:'Ultra-Rare', v:1200,  d:20  },
-  /* ── STEAL A BRAINROT (moonvalues.com / progameguides) ── */
-  {n:'Strawberry Elephant', g:'brainrot', tier:'OG',       v:50000, d:0    },
-  {n:'Skibidi Toilet',      g:'brainrot', tier:'OG',       v:35000, d:0    },
-  {n:'Meowl',               g:'brainrot', tier:'OG',       v:25000, d:0    },
-  {n:'Dragon Gingerini',    g:'brainrot', tier:'Secret',   v:9500,  d:0    },
-  {n:'Dragon Cannelloni',   g:'brainrot', tier:'Secret',   v:5500,  d:0    },
-  {n:'Hydra Dragon Cannelloni',g:'brainrot',tier:'Secret', v:5000,  d:0    },
-  {n:'Cerberus',            g:'brainrot', tier:'Secret',   v:4500,  d:0    },
-  {n:'Rosey and Teddy',     g:'brainrot', tier:'Secret',   v:3800,  d:0    },
-  {n:'Ketupat Bros',        g:'brainrot', tier:'Secret',   v:2700,  d:0    },
-  {n:'Ginger Gerat',        g:'brainrot', tier:'Secret',   v:2500,  d:0    },
-  {n:'La Supreme Combinasion',g:'brainrot',tier:'Secret',  v:2400,  d:0    },
-  {n:'Capitano Moby',       g:'brainrot', tier:'Secret',   v:2000,  d:0    },
-  {n:'Los Primos',          g:'brainrot', tier:'Secret',   v:1000,  d:0    },
-  {n:'Los Spaghettis',      g:'brainrot', tier:'Secret',   v:300,   d:0    },
-  {n:'Los Mobilis',         g:'brainrot', tier:'Secret',   v:25,    d:0    },
-  /* ── GROW A GARDEN (growagarden.gg) ── */
-  {n:'Octobloom',           g:'garden', tier:'Transcendent', v:260721, d:0  },
-  {n:'Zebrazinkle',         g:'garden', tier:'Transcendent', v:85000, d:2000 },
-  {n:'Candy Blossom',       g:'garden', tier:'Legendary',    v:45000, d:500  },
-  {n:'Maple Resin',         g:'garden', tier:'Legendary',    v:40000, d:800  },
-  {n:'Bone Blossom',        g:'garden', tier:'Legendary',    v:38000, d:0    },
-  {n:'Moon Blossom',        g:'garden', tier:'Legendary',    v:25000, d:400  },
-  {n:'Hive Fruit',          g:'garden', tier:'Rare',         v:45000, d:200  },
-  {n:'Nectarine',           g:'garden', tier:'Rare',         v:31000, d:0    },
-  {n:'Beanstalk',           g:'garden', tier:'Rare',         v:20000, d:0    },
-  {n:'Sunflower',           g:'garden', tier:'Uncommon',     v:14000, d:300  },
-  {n:'Lilac',               g:'garden', tier:'Uncommon',     v:30000, d:100  },
-  {n:'Foxglove',            g:'garden', tier:'Uncommon',     v:16000, d:0    },
-  {n:'Dragon Fruit',        g:'garden', tier:'Common',       v:4200,  d:0    },
-  {n:'Rose',                g:'garden', tier:'Common',       v:4800,  d:0    },
-  /* ── SHARP (msvalues.com) ── */
-  {n:'Void Dagger',         g:'sharp', tier:'Mythic',    v:850,   d:30   },
-  {n:'Phantom Edge',        g:'sharp', tier:'Legendary', v:420,   d:-10  },
-  {n:'Golden Blade',        g:'sharp', tier:'Legendary', v:380,   d:15   },
-  {n:'Crystal Shard',       g:'sharp', tier:'Epic',      v:180,   d:5    },
-  {n:'Shadow Slice',        g:'sharp', tier:'Epic',      v:140,   d:0    },
-  {n:'Neon Knife',          g:'sharp', tier:'Rare',      v:75,    d:8    },
-  {n:'Electric Edge',       g:'sharp', tier:'Rare',      v:60,    d:2    },
-  {n:'Iron Blade',          g:'sharp', tier:'Uncommon',  v:25,    d:0    },
+  /* ══════════════════════════════
+     MM2  —  supremevalues.com  Feb 27 2026
+  ══════════════════════════════ */
+  /* Chroma Tier 3 */
+  {n:'C. Traveler\'s Gun',      g:'mm2', tier:'Chroma',      v:215000, d:5000  },
+  {n:'Chroma Evergun',          g:'mm2', tier:'Chroma',      v:92000,  d:1000  },
+  {n:'Chroma Evergreen',        g:'mm2', tier:'Chroma',      v:61000,  d:1000  },
+  {n:'Chroma Bauble',           g:'mm2', tier:'Chroma',      v:49000,  d:-1000 },
+  {n:'C. Vampire\'s Gun',       g:'mm2', tier:'Chroma',      v:43000,  d:-1000 },
+  {n:'C. Constellation',        g:'mm2', tier:'Chroma',      v:40000,  d:-1000 },
+  /* Chroma Tier 2 */
+  {n:'Chroma Alienbeam',        g:'mm2', tier:'Chroma',      v:31000,  d:1000  },
+  {n:'Chroma Raygun',           g:'mm2', tier:'Chroma',      v:16000,  d:500   },
+  {n:'Chroma Blizzard',         g:'mm2', tier:'Chroma',      v:14500,  d:-500  },
+  {n:'Chroma Treat',            g:'mm2', tier:'Chroma',      v:11000,  d:0     },
+  {n:'Chroma Sunrise',          g:'mm2', tier:'Chroma',      v:11000,  d:250   },
+  {n:'Chroma Sweet',            g:'mm2', tier:'Chroma',      v:9500,   d:0     },
+  {n:'C. Snowcannon',           g:'mm2', tier:'Chroma',      v:9000,   d:-500  },
+  {n:'Chroma Snowstorm',        g:'mm2', tier:'Chroma',      v:9000,   d:-250  },
+  {n:'C. Heart Wand',           g:'mm2', tier:'Chroma',      v:6500,   d:-500  },
+  {n:'Chroma Sunset',           g:'mm2', tier:'Chroma',      v:6500,   d:100   },
+  {n:'C. Snow Dagger',          g:'mm2', tier:'Chroma',      v:6000,   d:-250  },
+  {n:'Chroma Ornament',         g:'mm2', tier:'Chroma',      v:4200,   d:-300  },
+  {n:'Chroma Watergun',         g:'mm2', tier:'Chroma',      v:3400,   d:-50   },
+  /* Chroma Tier 1 */
+  {n:'C. Darkbringer',          g:'mm2', tier:'Chroma',      v:95,     d:0     },
+  {n:'C. Lightbringer',         g:'mm2', tier:'Chroma',      v:90,     d:0     },
+  {n:'C. Candleflame',          g:'mm2', tier:'Chroma',      v:70,     d:0     },
+  {n:'C. Cookiecane',           g:'mm2', tier:'Chroma',      v:60,     d:0     },
+  {n:'C. Elderwood Blade',      g:'mm2', tier:'Chroma',      v:60,     d:-2    },
+  {n:'C. Swirly Gun',           g:'mm2', tier:'Chroma',      v:60,     d:-2    },
+  {n:'Chroma Luger',            g:'mm2', tier:'Chroma',      v:60,     d:-2    },
+  {n:'Chroma Laser',            g:'mm2', tier:'Chroma',      v:55,     d:-3    },
+  {n:'C. Deathshard',           g:'mm2', tier:'Chroma',      v:50,     d:-5    },
+  {n:'Chroma Shark',            g:'mm2', tier:'Chroma',      v:50,     d:-5    },
+  {n:'Chroma Slasher',          g:'mm2', tier:'Chroma',      v:50,     d:-5    },
+  {n:'Chroma Fang',             g:'mm2', tier:'Chroma',      v:45,     d:-5    },
+  {n:'Chroma Gemstone',         g:'mm2', tier:'Chroma',      v:45,     d:-5    },
+  {n:'Chroma Heat',             g:'mm2', tier:'Chroma',      v:45,     d:-5    },
+  /* Godly Tier 3 */
+  {n:'Traveler\'s Gun',         g:'mm2', tier:'Godly',       v:4200,   d:-100  },
+  {n:'Evergun',                 g:'mm2', tier:'Godly',       v:3550,   d:-50   },
+  {n:'Constellation',           g:'mm2', tier:'Godly',       v:3000,   d:-50   },
+  {n:'Evergreen',               g:'mm2', tier:'Godly',       v:2700,   d:-50   },
+  {n:'Turkey',                  g:'mm2', tier:'Godly',       v:1825,   d:25    },
+  {n:'Vampire\'s Gun',          g:'mm2', tier:'Godly',       v:1800,   d:-25   },
+  {n:'Darkshot',                g:'mm2', tier:'Godly',       v:1060,   d:10    },
+  {n:'Darksword',               g:'mm2', tier:'Godly',       v:1040,   d:10    },
+  {n:'Alienbeam',               g:'mm2', tier:'Godly',       v:1025,   d:25    },
+  {n:'Blossom (Godly)',         g:'mm2', tier:'Godly',       v:985,    d:5     },
+  {n:'Sakura',                  g:'mm2', tier:'Godly',       v:975,    d:5     },
+  {n:'Bauble',                  g:'mm2', tier:'Godly',       v:925,    d:25    },
+  {n:'Raygun',                  g:'mm2', tier:'Godly',       v:600,    d:25    },
+  {n:'Sunrise',                 g:'mm2', tier:'Godly',       v:525,    d:-25   },
+  {n:'Heart Wand',              g:'mm2', tier:'Godly',       v:325,    d:-50   },
+  {n:'Snowcannon',              g:'mm2', tier:'Godly',       v:325,    d:-25   },
+  {n:'Rainbow Gun',             g:'mm2', tier:'Godly',       v:315,    d:5     },
+  {n:'Rainbow',                 g:'mm2', tier:'Godly',       v:305,    d:5     },
+  {n:'Soul',                    g:'mm2', tier:'Godly',       v:305,    d:5     },
+  {n:'Spirit',                  g:'mm2', tier:'Godly',       v:295,    d:5     },
+  {n:'Sunset',                  g:'mm2', tier:'Godly',       v:275,    d:-25   },
+  {n:'Flora',                   g:'mm2', tier:'Godly',       v:265,    d:-5    },
+  {n:'Bloom',                   g:'mm2', tier:'Godly',       v:255,    d:-5    },
+  {n:'Sweet',                   g:'mm2', tier:'Godly',       v:225,    d:-25   },
+  {n:'Treat',                   g:'mm2', tier:'Godly',       v:225,    d:-25   },
+  {n:'Snow Dagger',             g:'mm2', tier:'Godly',       v:220,    d:-5    },
+  {n:'Bat',                     g:'mm2', tier:'Godly',       v:205,    d:-5    },
+  {n:'Flowerwood Gun',          g:'mm2', tier:'Godly',       v:170,    d:5     },
+  {n:'Flowerwood',              g:'mm2', tier:'Godly',       v:165,    d:5     },
+  {n:'Blizzard',                g:'mm2', tier:'Godly',       v:155,    d:-5    },
+  {n:'Snowstorm',               g:'mm2', tier:'Godly',       v:155,    d:-5    },
+  {n:'Xenoknife',               g:'mm2', tier:'Godly',       v:150,    d:-5    },
+  {n:'Xenoshot',                g:'mm2', tier:'Godly',       v:150,    d:-5    },
+  {n:'Ocean',                   g:'mm2', tier:'Godly',       v:145,    d:-5    },
+  {n:'Waves',                   g:'mm2', tier:'Godly',       v:140,    d:-5    },
+  {n:'Candy',                   g:'mm2', tier:'Godly',       v:130,    d:-5    },
+  {n:'Watergun',                g:'mm2', tier:'Godly',       v:115,    d:-5    },
+  {n:'Heartblade',              g:'mm2', tier:'Godly',       v:115,    d:-5    },
+  {n:'Borealis',                g:'mm2', tier:'Godly',       v:105,    d:-5    },
+  {n:'Australis',               g:'mm2', tier:'Godly',       v:100,    d:-5    },
+  /* Godly Tier 2 */
+  {n:'Pearl',                   g:'mm2', tier:'Godly',       v:60,     d:-2    },
+  {n:'Pearlshine',              g:'mm2', tier:'Godly',       v:60,     d:-2    },
+  {n:'Iceblaster',              g:'mm2', tier:'Godly',       v:60,     d:-5    },
+  {n:'Luger',                   g:'mm2', tier:'Godly',       v:60,     d:-5    },
+  {n:'Sugar',                   g:'mm2', tier:'Godly',       v:60,     d:-5    },
+  /* Ancient Tier 2 */
+  {n:'Gingerscope',             g:'mm2', tier:'Ancient',     v:17000,  d:250   },
+  {n:'Traveler\'s Axe',         g:'mm2', tier:'Ancient',     v:7800,   d:-100  },
+  {n:'Celestial',               g:'mm2', tier:'Ancient',     v:1800,   d:-25   },
+  {n:'Vampire\'s Axe',          g:'mm2', tier:'Ancient',     v:950,    d:25    },
+  {n:'Harvester',               g:'mm2', tier:'Ancient',     v:400,    d:-15   },
+  {n:'Icepiercer',              g:'mm2', tier:'Ancient',     v:300,    d:-15   },
+  /* Ancient Tier 1 */
+  {n:'Icebreaker',              g:'mm2', tier:'Ancient',     v:115,    d:-5    },
+  {n:'Batwing',                 g:'mm2', tier:'Ancient',     v:57,     d:-3    },
+  {n:'Swirly Axe',              g:'mm2', tier:'Ancient',     v:55,     d:-5    },
+  {n:'Elderwood Scythe',        g:'mm2', tier:'Ancient',     v:55,     d:-5    },
+  {n:'Hallowscythe',            g:'mm2', tier:'Ancient',     v:45,     d:-3    },
+  {n:'Logchopper',              g:'mm2', tier:'Ancient',     v:20,     d:-2    },
+  {n:'Icewing',                 g:'mm2', tier:'Ancient',     v:13,     d:1     },
+  /* Legendary Special */
+  {n:'JD',                      g:'mm2', tier:'Legendary',   v:35,     d:-5    },
+  /* Legendary Tier 3 */
+  {n:'Latte (Gun)',             g:'mm2', tier:'Legendary',   v:130,    d:5     },
+  {n:'Latte (Knife)',           g:'mm2', tier:'Legendary',   v:130,    d:5     },
+  {n:'Cotton Candy',            g:'mm2', tier:'Legendary',   v:40,     d:0     },
+  {n:'Beach',                   g:'mm2', tier:'Legendary',   v:30,     d:5     },
+  {n:'Spectral (Knife)',        g:'mm2', tier:'Legendary',   v:20,     d:2     },
+  {n:'Traveler (Gun)',          g:'mm2', tier:'Legendary',   v:20,     d:2     },
+  {n:'Vampire Gun (2022)',      g:'mm2', tier:'Legendary',   v:13,     d:1     },
+  {n:'Aurora Gun (2021)',       g:'mm2', tier:'Legendary',   v:10,     d:2     },
+  {n:'Cavern (Knife)',          g:'mm2', tier:'Legendary',   v:7,      d:-1    },
+  {n:'Skulls',                  g:'mm2', tier:'Legendary',   v:7,      d:0     },
+  {n:'Broken',                  g:'mm2', tier:'Legendary',   v:7,      d:0     },
+  {n:'Ginger Gun (2018)',       g:'mm2', tier:'Legendary',   v:6,      d:0     },
+  {n:'Arctic Gun',              g:'mm2', tier:'Legendary',   v:5,      d:1     },
+  {n:'Bunnies',                 g:'mm2', tier:'Legendary',   v:5,      d:1     },
+  {n:'Icedriller',              g:'mm2', tier:'Legendary',   v:5,      d:-2    },
+  {n:'Nightsky',                g:'mm2', tier:'Legendary',   v:5,      d:1     },
+  {n:'Ghost (Knife)',           g:'mm2', tier:'Legendary',   v:5,      d:0     },
+  {n:'Scratch (2016)',          g:'mm2', tier:'Legendary',   v:4,      d:0     },
+  {n:'Witched',                 g:'mm2', tier:'Legendary',   v:3,      d:-1    },
+  {n:'Blue Elite',              g:'mm2', tier:'Legendary',   v:3,      d:0     },
+  {n:'Green Elite',             g:'mm2', tier:'Legendary',   v:3,      d:0     },
+  {n:'Santa\'s Magic',          g:'mm2', tier:'Legendary',   v:3,      d:0     },
+  {n:'Santa\'s Spirit',         g:'mm2', tier:'Legendary',   v:3,      d:0     },
+  {n:'Spectral (Gun)',          g:'mm2', tier:'Legendary',   v:2,      d:0     },
+  /* Rare Tier 3 */
+  {n:'Cane Knife (2018)',       g:'mm2', tier:'Rare',        v:525,    d:25    },
+  {n:'Silent Night (Knife)',    g:'mm2', tier:'Rare',        v:50,     d:-5    },
+  {n:'Dungeon',                 g:'mm2', tier:'Rare',        v:30,     d:2     },
+  {n:'Zombified',               g:'mm2', tier:'Rare',        v:27,     d:2     },
+  {n:'Makeshift (Knife)',       g:'mm2', tier:'Rare',        v:25,     d:5     },
+  {n:'Aurora (Knife)',          g:'mm2', tier:'Rare',        v:13,     d:-2    },
+  {n:'Silent Night (Gun)',      g:'mm2', tier:'Rare',        v:13,     d:1     },
+  {n:'Icicles (Gun)',           g:'mm2', tier:'Rare',        v:10,     d:-2    },
+  {n:'Starry (Gun)',            g:'mm2', tier:'Rare',        v:8,      d:1     },
+  {n:'Vampire Gun (2018)',      g:'mm2', tier:'Rare',        v:8,      d:0     },
+  {n:'Darkknife',               g:'mm2', tier:'Rare',        v:7,      d:2     },
+  {n:'Swirl',                   g:'mm2', tier:'Rare',        v:7,      d:2     },
+  {n:'Toxic (Knife)',           g:'mm2', tier:'Rare',        v:7,      d:-1    },
+  {n:'Candy Swirl (Gun)',       g:'mm2', tier:'Rare',        v:5,      d:-2    },
+  {n:'Floral (Knife)',          g:'mm2', tier:'Rare',        v:5,      d:2     },
+  {n:'Magma',                   g:'mm2', tier:'Rare',        v:5,      d:0     },
+  {n:'Monster',                 g:'mm2', tier:'Rare',        v:5,      d:0     },
+  {n:'Jack',                    g:'mm2', tier:'Rare',        v:3,      d:0     },
+  {n:'Magma (Gun)',             g:'mm2', tier:'Rare',        v:3,      d:1     },
+  {n:'Snakebite (Knife)',       g:'mm2', tier:'Rare',        v:3,      d:-2    },
+  {n:'Watcher (Gun)',           g:'mm2', tier:'Rare',        v:3,      d:1     },
+  {n:'Bats',                    g:'mm2', tier:'Rare',        v:3,      d:0     },
+  {n:'Green Marble',            g:'mm2', tier:'Rare',        v:3,      d:0     },
+  {n:'Orange Marble',           g:'mm2', tier:'Rare',        v:2,      d:0     },
+  /* Uncommon Tier 4 */
+  {n:'Bones (2019)',            g:'mm2', tier:'Uncommon',    v:70,     d:5     },
+  {n:'Zombified (Knife)',       g:'mm2', tier:'Uncommon',    v:65,     d:0     },
+  {n:'Gingerbread (Knife)',     g:'mm2', tier:'Uncommon',    v:50,     d:0     },
+  {n:'Sweater (Knife)',         g:'mm2', tier:'Uncommon',    v:50,     d:5     },
+  {n:'Brains (2019)',           g:'mm2', tier:'Uncommon',    v:40,     d:0     },
+  {n:'Branches',                g:'mm2', tier:'Uncommon',    v:25,     d:0     },
+  {n:'Zombified (Gun)',         g:'mm2', tier:'Uncommon',    v:15,     d:0     },
+  {n:'Frozen (Gun)',            g:'mm2', tier:'Uncommon',    v:10,     d:0     },
+  {n:'Mummy 2018 (Gun)',        g:'mm2', tier:'Uncommon',    v:10,     d:-2    },
+  {n:'Skulls (2021)',           g:'mm2', tier:'Uncommon',    v:10,     d:2     },
+  {n:'Void',                    g:'mm2', tier:'Uncommon',    v:10,     d:-2    },
+  {n:'Zombie (Gun)',            g:'mm2', tier:'Uncommon',    v:10,     d:0     },
+  /* Uncommon Tier 3 */
+  {n:'Potion (Knife)',          g:'mm2', tier:'Uncommon',    v:8,      d:-2    },
+  {n:'Lights (Gun)',            g:'mm2', tier:'Uncommon',    v:7,      d:-1    },
+  {n:'Snowflake',               g:'mm2', tier:'Uncommon',    v:5,      d:0     },
+  {n:'Potion (Gun)',            g:'mm2', tier:'Uncommon',    v:5,      d:0     },
+  {n:'Holly (Gun)',             g:'mm2', tier:'Uncommon',    v:4,      d:-1    },
+  {n:'Webs',                    g:'mm2', tier:'Uncommon',    v:3,      d:0     },
+  {n:'Frozen (Knife)',          g:'mm2', tier:'Uncommon',    v:3,      d:-2    },
+  {n:'Gingerbread (Gun)',       g:'mm2', tier:'Uncommon',    v:3,      d:0     },
+  {n:'Mummy 2018 (Knife)',      g:'mm2', tier:'Uncommon',    v:3,      d:0     },
+  /* Common Victim Tier */
+  {n:'Glitch1',                 g:'mm2', tier:'Common',      v:75,     d:-5    },
+  {n:'Glitch2',                 g:'mm2', tier:'Common',      v:55,     d:-5    },
+  /* Common Tier 3 */
+  {n:'Bats (Knife 2018)',       g:'mm2', tier:'Common',      v:110,    d:5     },
+  {n:'Pine (Knife)',            g:'mm2', tier:'Common',      v:85,     d:-5    },
+  {n:'Gifts (Knife)',           g:'mm2', tier:'Common',      v:70,     d:0     },
+  {n:'Ghoulish',                g:'mm2', tier:'Common',      v:35,     d:5     },
+  {n:'Sparkle9',                g:'mm2', tier:'Common',      v:30,     d:0     },
+  {n:'Sparkle10',               g:'mm2', tier:'Common',      v:20,     d:0     },
+  {n:'Sparkle8',                g:'mm2', tier:'Common',      v:20,     d:0     },
+  {n:'Sparkle7',                g:'mm2', tier:'Common',      v:18,     d:0     },
+  {n:'Snowman Gun',             g:'mm2', tier:'Common',      v:17,     d:2     },
+  {n:'Wrapped Gun',             g:'mm2', tier:'Common',      v:17,     d:2     },
+  {n:'Elf (Knife 2015)',        g:'mm2', tier:'Common',      v:17,     d:0     },
+  {n:'Frosted (Knife)',         g:'mm2', tier:'Common',      v:15,     d:2     },
+  {n:'RIP Gun',                 g:'mm2', tier:'Common',      v:12,     d:-3    },
+  {n:'Sparkle6',                g:'mm2', tier:'Common',      v:12,     d:0     },
+  {n:'Coal (Knife 2018)',       g:'mm2', tier:'Common',      v:10,     d:0     },
+  {n:'Snowflakes (Gun)',        g:'mm2', tier:'Common',      v:10,     d:2     },
+  {n:'Candy Corn (2017)',       g:'mm2', tier:'Common',      v:10,     d:0     },
+  {n:'Combat II',               g:'mm2', tier:'Common',      v:10,     d:0     },
+  {n:'Prism',                   g:'mm2', tier:'Common',      v:10,     d:2     },
+  {n:'Sparkle4',                g:'mm2', tier:'Common',      v:10,     d:2     },
+  {n:'Skool',                   g:'mm2', tier:'Common',      v:8,      d:0     },
+  /* Vintage */
+  {n:'Ghost (Vintage)',         g:'mm2', tier:'Vintage',     v:10,     d:0     },
+  {n:'Blood',                   g:'mm2', tier:'Vintage',     v:8,      d:0     },
+  {n:'Laser (Vintage)',         g:'mm2', tier:'Vintage',     v:8,      d:0     },
+  {n:'America (Vintage)',       g:'mm2', tier:'Vintage',     v:7,      d:0     },
+  {n:'Prince',                  g:'mm2', tier:'Vintage',     v:6,      d:0     },
+  {n:'Shadow (Vintage)',        g:'mm2', tier:'Vintage',     v:6,      d:0     },
+  {n:'Phaser',                  g:'mm2', tier:'Vintage',     v:5,      d:0     },
+  {n:'Cowboy',                  g:'mm2', tier:'Vintage',     v:4,      d:-1    },
+  {n:'Golden (Vintage)',        g:'mm2', tier:'Vintage',     v:4,      d:0     },
+  {n:'Splitter',                g:'mm2', tier:'Vintage',     v:3,      d:0     },
+  /* Pets */
+  {n:'Zombie Dog',              g:'mm2', tier:'Pet',         v:450,    d:25    },
+  {n:'Elf Pet (2019)',          g:'mm2', tier:'Pet',         v:200,    d:0     },
+  {n:'Blue Pumpkin (2018)',     g:'mm2', tier:'Pet',         v:140,    d:10    },
+  {n:'Red Pumpkin (2018)',      g:'mm2', tier:'Pet',         v:100,    d:10    },
+  {n:'Dogey',                   g:'mm2', tier:'Pet',         v:90,     d:5     },
+  {n:'Green Pumpkin (2018)',    g:'mm2', tier:'Pet',         v:60,     d:5     },
+  {n:'Black Cat',               g:'mm2', tier:'Pet',         v:60,     d:0     },
+  {n:'Santa 2019',              g:'mm2', tier:'Pet',         v:35,     d:0     },
+  {n:'Pumpkin (2017)',          g:'mm2', tier:'Pet',         v:25,     d:0     },
+  {n:'Piggy',                   g:'mm2', tier:'Pet',         v:20,     d:0     },
+  {n:'Mr. Reindeer',            g:'mm2', tier:'Pet',         v:15,     d:3     },
+  {n:'Fairy',                   g:'mm2', tier:'Pet',         v:13,     d:0     },
+  {n:'Jetstream',               g:'mm2', tier:'Pet',         v:13,     d:0     },
+  {n:'Nobledragon',             g:'mm2', tier:'Pet',         v:13,     d:0     },
+  {n:'Seahorsey',               g:'mm2', tier:'Pet',         v:13,     d:0     },
+  {n:'Chilly',                  g:'mm2', tier:'Pet',         v:12,     d:0     },
+  {n:'Green Pumpkin (2019)',    g:'mm2', tier:'Pet',         v:12,     d:0     },
+  {n:'Pengy',                   g:'mm2', tier:'Pet',         v:12,     d:0     },
+  {n:'Purple Pumpkin (2018)',   g:'mm2', tier:'Pet',         v:12,     d:0     },
+  {n:'Red Pumpkin (2019)',      g:'mm2', tier:'Pet',         v:12,     d:0     },
+  {n:'Rudolph',                 g:'mm2', tier:'Pet',         v:12,     d:-1    },
+  {n:'Vampire Bat',             g:'mm2', tier:'Pet',         v:12,     d:0     },
+  {n:'<3 Pet',                  g:'mm2', tier:'Pet',         v:10,     d:0     },
+  {n:'Eyeball',                 g:'mm2', tier:'Pet',         v:10,     d:0     },
+  /* Pets Tier 3 continued */
+  {n:'Elf Pet (2019)',          g:'mm2', tier:'Pet',         v:200,    d:0     },
+  /* Pets Tier 2 */
+  {n:'Witch',                   g:'mm2', tier:'Pet',         v:9,      d:0     },
+  {n:'Pumpkin Pet (2019)',      g:'mm2', tier:'Pet',         v:8,      d:0     },
+  {n:'Santa 2018',              g:'mm2', tier:'Pet',         v:8,      d:0     },
+  {n:'Reindeer Pet (2019)',     g:'mm2', tier:'Pet',         v:7,      d:0     },
+  {n:'Snowman Pet',             g:'mm2', tier:'Pet',         v:6,      d:0     },
+  {n:'Ghost Pet',               g:'mm2', tier:'Pet',         v:6,      d:0     },
+  {n:'Brown Pumpkin (2018)',    g:'mm2', tier:'Pet',         v:5,      d:0     },
+  {n:'Blue Pumpkin (2019)',     g:'mm2', tier:'Pet',         v:5,      d:0     },
+  {n:'Yellow Pumpkin (2018)',   g:'mm2', tier:'Pet',         v:4,      d:0     },
+  {n:'Orange Pumpkin (2018)',   g:'mm2', tier:'Pet',         v:4,      d:0     },
+  {n:'Iceclops',                g:'mm2', tier:'Pet',         v:4,      d:0     },
+  {n:'Wolfie',                  g:'mm2', tier:'Pet',         v:4,      d:0     },
+  /* Pets Tier 1 */
+  {n:'Rat (Pet)',               g:'mm2', tier:'Pet',         v:3,      d:0     },
+  {n:'Spider',                  g:'mm2', tier:'Pet',         v:3,      d:0     },
+  {n:'Bunny (Pet)',             g:'mm2', tier:'Pet',         v:3,      d:0     },
+  {n:'Snowball',                g:'mm2', tier:'Pet',         v:2,      d:0     },
+  {n:'Mini Snowman',            g:'mm2', tier:'Pet',         v:2,      d:0     },
+  {n:'Bat (Pet)',               g:'mm2', tier:'Pet',         v:2,      d:0     },
+  /* Godly Tier 1 */
+  {n:'Darkbringer',             g:'mm2', tier:'Godly',       v:50,     d:-5    },
+  {n:'Lightbringer',            g:'mm2', tier:'Godly',       v:48,     d:-5    },
+  {n:'Elderwood Revolver',      g:'mm2', tier:'Godly',       v:45,     d:-2    },
+  {n:'Elderwood Blade',         g:'mm2', tier:'Godly',       v:42,     d:-2    },
+  {n:'Deathshard',              g:'mm2', tier:'Godly',       v:40,     d:-2    },
+  {n:'Gemstone',                g:'mm2', tier:'Godly',       v:38,     d:-2    },
+  {n:'Slasher',                 g:'mm2', tier:'Godly',       v:36,     d:-2    },
+  {n:'Fang',                    g:'mm2', tier:'Godly',       v:34,     d:-2    },
+  {n:'Heat',                    g:'mm2', tier:'Godly',       v:32,     d:-2    },
+  {n:'Minty',                   g:'mm2', tier:'Godly',       v:30,     d:-2    },
+  {n:'Vamp\'s Edge',            g:'mm2', tier:'Godly',       v:28,     d:-2    },
+  {n:'Cookiecane',              g:'mm2', tier:'Godly',       v:25,     d:0     },
+  {n:'Candleflame',             g:'mm2', tier:'Godly',       v:25,     d:0     },
+  {n:'Laser',                   g:'mm2', tier:'Godly',       v:22,     d:-2    },
+  {n:'Shark',                   g:'mm2', tier:'Godly',       v:20,     d:-2    },
+  /* Commons Tier 2 */
+  {n:'Sparkle5',                g:'mm2', tier:'Common',      v:8,      d:0     },
+  {n:'Tailslide',               g:'mm2', tier:'Common',      v:8,      d:-2    },
+  {n:'Phantom (Common)',        g:'mm2', tier:'Common',      v:8,      d:0     },
+  {n:'Ollie',                   g:'mm2', tier:'Common',      v:7,      d:0     },
+  {n:'Sidewinder',              g:'mm2', tier:'Common',      v:7,      d:0     },
+  {n:'Pumpkin (2019)',          g:'mm2', tier:'Common',      v:5,      d:2     },
+  {n:'Ecto',                    g:'mm2', tier:'Common',      v:5,      d:2     },
+  {n:'Grave (Gun)',             g:'mm2', tier:'Common',      v:5,      d:-2    },
+  {n:'Zombie (2017)',           g:'mm2', tier:'Common',      v:5,      d:0     },
+  {n:'Asteroid',                g:'mm2', tier:'Common',      v:5,      d:0     },
+  {n:'Sparkle3',                g:'mm2', tier:'Common',      v:4,      d:0     },
+  {n:'Bones (2018)',            g:'mm2', tier:'Common',      v:4,      d:0     },
+  {n:'Leaves (Knife)',          g:'mm2', tier:'Common',      v:4,      d:0     },
+  {n:'Robin (Knife)',           g:'mm2', tier:'Common',      v:4,      d:0     },
+  {n:'Elf (Gun 2015)',          g:'mm2', tier:'Common',      v:4,      d:0     },
+  {n:'Star (Knife)',            g:'mm2', tier:'Common',      v:3,      d:0     },
+  {n:'Gingerbread (2018)',      g:'mm2', tier:'Common',      v:3,      d:0     },
+  {n:'Snowball Gun',            g:'mm2', tier:'Common',      v:3,      d:0     },
+  {n:'Marble (Common)',         g:'mm2', tier:'Common',      v:2,      d:0     },
+  {n:'Peppermint (Common)',     g:'mm2', tier:'Common',      v:2,      d:0     },
+  /* Commons Tier 1 */
+  {n:'Sparkle2',                g:'mm2', tier:'Common',      v:2,      d:0     },
+  {n:'Sparkle1',                g:'mm2', tier:'Common',      v:1,      d:0     },
+  {n:'Candy Corn (2016)',       g:'mm2', tier:'Common',      v:1,      d:0     },
+  {n:'Spider Web',              g:'mm2', tier:'Common',      v:1,      d:0     },
+  {n:'Bat (Common)',            g:'mm2', tier:'Common',      v:1,      d:0     },
+  /* Uncommon Tier 2 continued */
+  {n:'Firework',                g:'mm2', tier:'Uncommon',    v:2,      d:0     },
+  {n:'Party Popper',            g:'mm2', tier:'Uncommon',    v:2,      d:0     },
+  {n:'Broom (Uncommon)',        g:'mm2', tier:'Uncommon',    v:2,      d:0     },
+  /* Unique */
+  {n:'Corrupt',                 g:'mm2', tier:'Unique',      v:800,    d:-25   },
+  /* Evos (not tradable but listed for reference) */
+  {n:'Synthwave (Var 4)',       g:'mm2', tier:'Evo',         v:0,      d:0     },
+  {n:'Synthwave (Var 3)',       g:'mm2', tier:'Evo',         v:0,      d:0     },
+  {n:'Gingerscythe (Var 4)',    g:'mm2', tier:'Evo',         v:0,      d:0     },
+  {n:'Gingerscythe (Var 3)',    g:'mm2', tier:'Evo',         v:0,      d:0     },
+  {n:'Icecrusher (Var 4)',      g:'mm2', tier:'Evo',         v:0,      d:0     },
+  {n:'Icecrusher (Var 3)',      g:'mm2', tier:'Evo',         v:0,      d:0     },
+  {n:'Reaver (Var 4)',          g:'mm2', tier:'Evo',         v:0,      d:0     },
+  {n:'Reaver (Var 3)',          g:'mm2', tier:'Evo',         v:0,      d:0     },
+  /* Misc */
+  {n:'Mystery Key',             g:'mm2', tier:'Misc',        v:1,      d:0     },
+  {n:'Box of Ultra Wrap',       g:'mm2', tier:'Misc',        v:5,      d:0     },
+  {n:'Box of Gold Papers',      g:'mm2', tier:'Misc',        v:4,      d:0     },
+  {n:'Box of Blue Papers',      g:'mm2', tier:'Misc',        v:3,      d:0     },
+  {n:'Box of Purple Papers',    g:'mm2', tier:'Misc',        v:3,      d:0     },
+  {n:'Box of Red Papers',       g:'mm2', tier:'Misc',        v:3,      d:0     },
+  {n:'Box of Fertilizer',       g:'mm2', tier:'Misc',        v:2,      d:0     },
+  {n:'Box of Green Papers',     g:'mm2', tier:'Misc',        v:2,      d:0     },
+  {n:'Skeleton Key',            g:'mm2', tier:'Misc',        v:5,      d:0     },
+
+  /* ══════════════════════════════
+     ADOPT ME  —  beebom / elvebredd Nov 2025
+     Values = relative trading units (x1000 for display)
+  ══════════════════════════════ */
+  /* Legendary */
+  {n:'Shadow Dragon',           g:'adoptme', tier:'Legendary',   v:245000,  d:0   },
+  {n:'Bat Dragon',              g:'adoptme', tier:'Legendary',   v:225000,  d:0   },
+  {n:'Giraffe',                 g:'adoptme', tier:'Legendary',   v:142500,  d:0   },
+  {n:'Frost Dragon',            g:'adoptme', tier:'Legendary',   v:100000,  d:0   },
+  {n:'Owl',                     g:'adoptme', tier:'Legendary',   v:75000,   d:0   },
+  {n:'Parrot',                  g:'adoptme', tier:'Legendary',   v:62500,   d:0   },
+  {n:'Crow',                    g:'adoptme', tier:'Legendary',   v:50000,   d:0   },
+  {n:'Evil Unicorn',            g:'adoptme', tier:'Legendary',   v:50000,   d:0   },
+  {n:'Blazing Lion',            g:'adoptme', tier:'Legendary',   v:37500,   d:0   },
+  {n:'Monkey King',             g:'adoptme', tier:'Legendary',   v:19000,   d:0   },
+  {n:'Turtle',                  g:'adoptme', tier:'Legendary',   v:11000,   d:0   },
+  {n:'Golden Unicorn',          g:'adoptme', tier:'Legendary',   v:8500,    d:0   },
+  {n:'Golden Lady Bug',         g:'adoptme', tier:'Legendary',   v:8500,    d:0   },
+  {n:'Gold Walrus',             g:'adoptme', tier:'Legendary',   v:7000,    d:0   },
+  {n:'Kangaroo',                g:'adoptme', tier:'Legendary',   v:8000,    d:0   },
+  {n:'Arctic Reindeer',         g:'adoptme', tier:'Legendary',   v:20000,   d:0   },
+  {n:'Frost Fury',              g:'adoptme', tier:'Legendary',   v:4000,    d:0   },
+  {n:'Albino Monkey',           g:'adoptme', tier:'Legendary',   v:12000,   d:0   },
+  {n:'Strawberry Shortcake Bat Dragon', g:'adoptme', tier:'Legendary', v:5500, d:0 },
+  {n:'Hot Doggo',               g:'adoptme', tier:'Legendary',   v:6000,    d:0   },
+  {n:'Balloon Unicorn',         g:'adoptme', tier:'Legendary',   v:6000,    d:0   },
+  {n:'Dancing Dragon',          g:'adoptme', tier:'Legendary',   v:3500,    d:0   },
+  {n:'Ice Golem',               g:'adoptme', tier:'Legendary',   v:2000,    d:0   },
+  {n:'Ninja Monkey',            g:'adoptme', tier:'Legendary',   v:1750,    d:0   },
+  {n:'Phoenix',                 g:'adoptme', tier:'Legendary',   v:1500,    d:0   },
+  {n:'Diamond Lady Bug',        g:'adoptme', tier:'Legendary',   v:2000,    d:0   },
+  {n:'Skele-Rex',               g:'adoptme', tier:'Legendary',   v:2000,    d:0   },
+  {n:'Queen Bee',               g:'adoptme', tier:'Legendary',   v:1500,    d:0   },
+  {n:'T-Rex',                   g:'adoptme', tier:'Legendary',   v:1500,    d:0   },
+  {n:'Shark',                   g:'adoptme', tier:'Legendary',   v:1500,    d:0   },
+  {n:'Squid',                   g:'adoptme', tier:'Legendary',   v:1500,    d:0   },
+  {n:'Octopus',                 g:'adoptme', tier:'Legendary',   v:1500,    d:0   },
+  {n:'Dodo',                    g:'adoptme', tier:'Legendary',   v:1500,    d:0   },
+  {n:'Lavender Dragon',         g:'adoptme', tier:'Legendary',   v:2000,    d:0   },
+  {n:'Peacock',                 g:'adoptme', tier:'Legendary',   v:1000,    d:0   },
+  {n:'Diamond Dragon',          g:'adoptme', tier:'Legendary',   v:1500,    d:0   },
+  {n:'Diamond Griffin',         g:'adoptme', tier:'Legendary',   v:1000,    d:0   },
+  {n:'Diamond Unicorn',         g:'adoptme', tier:'Legendary',   v:2000,    d:0   },
+  {n:'Unicorn',                 g:'adoptme', tier:'Legendary',   v:1000,    d:0   },
+  {n:'Dragon',                  g:'adoptme', tier:'Legendary',   v:750,     d:0   },
+  {n:'Griffin',                 g:'adoptme', tier:'Legendary',   v:700,     d:0   },
+  {n:'Golden Dragon',           g:'adoptme', tier:'Legendary',   v:1000,    d:0   },
+  {n:'Golden Griffin',          g:'adoptme', tier:'Legendary',   v:800,     d:0   },
+  {n:'Robo Dog',                g:'adoptme', tier:'Legendary',   v:800,     d:0   },
+  {n:'Kitsune',                 g:'adoptme', tier:'Legendary',   v:850,     d:0   },
+  {n:'Golden Rat',              g:'adoptme', tier:'Legendary',   v:1200,    d:0   },
+  {n:'Goldhorn',                g:'adoptme', tier:'Legendary',   v:1000,    d:0   },
+  {n:'Guardian Lion',           g:'adoptme', tier:'Legendary',   v:800,     d:0   },
+  {n:'King Bee',                g:'adoptme', tier:'Legendary',   v:1200,    d:0   },
+  {n:'Chameleon',               g:'adoptme', tier:'Legendary',   v:1500,    d:0   },
+  {n:'Dragonfly',               g:'adoptme', tier:'Legendary',   v:750,     d:0   },
+  {n:'Cobra',                   g:'adoptme', tier:'Legendary',   v:850,     d:0   },
+  {n:'Snow Owl',                g:'adoptme', tier:'Legendary',   v:900,     d:0   },
+  {n:'Axolotl',                 g:'adoptme', tier:'Legendary',   v:1000,    d:0   },
+  {n:'Cerberus (AM)',           g:'adoptme', tier:'Legendary',   v:850,     d:0   },
+  {n:'Golden Penguin',          g:'adoptme', tier:'Legendary',   v:1000,    d:0   },
+  {n:'Golden King Penguin',     g:'adoptme', tier:'Legendary',   v:1000,    d:0   },
+  {n:'Frost Fury',              g:'adoptme', tier:'Legendary',   v:4000,    d:0   },
+  /* Ultra-Rare */
+  {n:'Blue Dog',                g:'adoptme', tier:'Ultra-Rare',  v:132500,  d:0   },
+  {n:'Hedgehog',                g:'adoptme', tier:'Ultra-Rare',  v:25000,   d:0   },
+  {n:'Dalmatian',               g:'adoptme', tier:'Ultra-Rare',  v:13000,   d:0   },
+  {n:'Pink Cat',                g:'adoptme', tier:'Ultra-Rare',  v:52500,   d:0   },
+  {n:'Crocodile',               g:'adoptme', tier:'Ultra-Rare',  v:7500,    d:0   },
+  {n:'Flamingo',                g:'adoptme', tier:'Ultra-Rare',  v:10000,   d:0   },
+  {n:'Lion',                    g:'adoptme', tier:'Ultra-Rare',  v:9000,    d:0   },
+  {n:'Zombie Buffalo',          g:'adoptme', tier:'Ultra-Rare',  v:2250,    d:0   },
+  {n:'Platypus',                g:'adoptme', tier:'Ultra-Rare',  v:2250,    d:0   },
+  {n:'Puffin',                  g:'adoptme', tier:'Ultra-Rare',  v:2000,    d:0   },
+  {n:'Purple Butterfly',        g:'adoptme', tier:'Ultra-Rare',  v:1500,    d:0   },
+  {n:'Llama',                   g:'adoptme', tier:'Ultra-Rare',  v:1500,    d:0   },
+  {n:'Turkey (AM)',             g:'adoptme', tier:'Ultra-Rare',  v:1500,    d:0   },
+  {n:'Koala',                   g:'adoptme', tier:'Ultra-Rare',  v:350,     d:0   },
+  {n:'Frog',                    g:'adoptme', tier:'Ultra-Rare',  v:400,     d:0   },
+  {n:'Husky',                   g:'adoptme', tier:'Ultra-Rare',  v:700,     d:0   },
+  {n:'Arctic Fox',              g:'adoptme', tier:'Ultra-Rare',  v:1000,    d:0   },
+  {n:'Business Monkey',         g:'adoptme', tier:'Ultra-Rare',  v:850,     d:0   },
+  {n:'Red Squirrel',            g:'adoptme', tier:'Ultra-Rare',  v:600,     d:0   },
+  {n:'St. Bernard',             g:'adoptme', tier:'Ultra-Rare',  v:450,     d:0   },
+  {n:'Toy Monkey',              g:'adoptme', tier:'Ultra-Rare',  v:850,     d:0   },
+  {n:'Lamb',                    g:'adoptme', tier:'Ultra-Rare',  v:1000,    d:0   },
+  {n:'Albino Bat',              g:'adoptme', tier:'Ultra-Rare',  v:250,     d:0   },
+  /* Rare */
+  {n:'Cow',                     g:'adoptme', tier:'Rare',        v:82500,   d:0   },
+  {n:'Elephant',                g:'adoptme', tier:'Rare',        v:90000,   d:0   },
+  {n:'Hyena',                   g:'adoptme', tier:'Rare',        v:60000,   d:0   },
+  {n:'Polar Bear',              g:'adoptme', tier:'Rare',        v:35000,   d:0   },
+  {n:'Swan',                    g:'adoptme', tier:'Rare',        v:30000,   d:0   },
+  {n:'Pig',                     g:'adoptme', tier:'Rare',        v:42500,   d:0   },
+  {n:'Brown Bear',              g:'adoptme', tier:'Rare',        v:40000,   d:0   },
+  {n:'Rhino',                   g:'adoptme', tier:'Rare',        v:38500,   d:0   },
+  {n:'Reindeer',                g:'adoptme', tier:'Rare',        v:20000,   d:0   },
+  {n:'Woolly Mammoth',          g:'adoptme', tier:'Rare',        v:8000,    d:0   },
+  {n:'Seahorse',                g:'adoptme', tier:'Rare',        v:5000,    d:0   },
+  {n:'Narwhal',                 g:'adoptme', tier:'Rare',        v:4500,    d:0   },
+  {n:'Musk Ox',                 g:'adoptme', tier:'Rare',        v:17500,   d:0   },
+  {n:'Lynx',                    g:'adoptme', tier:'Rare',        v:17500,   d:0   },
+  {n:'Rat',                     g:'adoptme', tier:'Rare',        v:5000,    d:0   },
+  {n:'Monkey',                  g:'adoptme', tier:'Rare',        v:5500,    d:0   },
+  {n:'Ox',                      g:'adoptme', tier:'Rare',        v:2500,    d:0   },
+  {n:'Bunny',                   g:'adoptme', tier:'Rare',        v:3500,    d:0   },
+  {n:'Beaver',                  g:'adoptme', tier:'Rare',        v:3500,    d:0   },
+  /* Uncommon */
+  {n:'Meerkat',                 g:'adoptme', tier:'Uncommon',    v:50000,   d:0   },
+  {n:'Wild Boar',               g:'adoptme', tier:'Uncommon',    v:27500,   d:0   },
+  {n:'Black Panther',           g:'adoptme', tier:'Uncommon',    v:25000,   d:0   },
+  {n:'Capybara',                g:'adoptme', tier:'Uncommon',    v:27500,   d:0   },
+  {n:'Silly Duck',              g:'adoptme', tier:'Uncommon',    v:25000,   d:0   },
+  {n:'Drake',                   g:'adoptme', tier:'Uncommon',    v:22500,   d:0   },
+  {n:'Wolf',                    g:'adoptme', tier:'Uncommon',    v:9000,    d:0   },
+  {n:'Snowman',                 g:'adoptme', tier:'Uncommon',    v:6500,    d:0   },
+  {n:'Pet Rock',                g:'adoptme', tier:'Uncommon',    v:5000,    d:0   },
+  {n:'Glyptodon',               g:'adoptme', tier:'Uncommon',    v:7000,    d:0   },
+  {n:'Stegosaurus',             g:'adoptme', tier:'Uncommon',    v:5000,    d:0   },
+  {n:'Dingo',                   g:'adoptme', tier:'Uncommon',    v:4000,    d:0   },
+  {n:'Bat (AM)',                 g:'adoptme', tier:'Uncommon',    v:3500,    d:0   },
+  {n:'Chocolate Labrador',      g:'adoptme', tier:'Uncommon',    v:3000,    d:0   },
+  {n:'Fennec Fox',              g:'adoptme', tier:'Uncommon',    v:1750,    d:0   },
+  /* Common */
+  {n:'Chicken',                 g:'adoptme', tier:'Common',      v:18000,   d:0   },
+  {n:'Chick',                   g:'adoptme', tier:'Common',      v:12500,   d:0   },
+  {n:'Robin',                   g:'adoptme', tier:'Common',      v:5000,    d:0   },
+  {n:'Ground Sloth',            g:'adoptme', tier:'Common',      v:4000,    d:0   },
+  {n:'Bandicoot',               g:'adoptme', tier:'Common',      v:2250,    d:0   },
+  {n:'Otter',                   g:'adoptme', tier:'Common',      v:1750,    d:0   },
+  {n:'Buffalo',                 g:'adoptme', tier:'Common',      v:1750,    d:0   },
+  {n:'Cat',                     g:'adoptme', tier:'Common',      v:1500,    d:0   },
+  {n:'Dog',                     g:'adoptme', tier:'Common',      v:1500,    d:0   },
+
+  /* ══════════════════════════════
+     STEAL A BRAINROT  —  allthings.how Feb 24 2026
+     Values in La Vacca Saturno Saturnita units
+  ══════════════════════════════ */
+  {n:'Strawberry Elephant',     g:'brainrot', tier:'OG',          v:50000,  d:0   },
+  {n:'Skibidi Toilet',          g:'brainrot', tier:'OG',          v:35000,  d:0   },
+  {n:'Meowl',                   g:'brainrot', tier:'OG',          v:25000,  d:0   },
+  /* Top-tier Secret */
+  {n:'Dragon Gingerini',        g:'brainrot', tier:'Secret',      v:9500,   d:0   },
+  {n:'Dragon Cannelloni',       g:'brainrot', tier:'Secret',      v:5500,   d:0   },
+  {n:'Hydra Dragon Cannelloni', g:'brainrot', tier:'Secret',      v:5000,   d:0   },
+  {n:'Cerberus (SAB)',          g:'brainrot', tier:'Secret',      v:4500,   d:0   },
+  {n:'Rosey and Teddy',         g:'brainrot', tier:'Secret',      v:3800,   d:0   },
+  {n:'Ketupat Bros',            g:'brainrot', tier:'Secret',      v:2700,   d:0   },
+  {n:'Ginger Gerat',            g:'brainrot', tier:'Secret',      v:2500,   d:0   },
+  {n:'La Supreme Combinasion',  g:'brainrot', tier:'Secret',      v:2400,   d:0   },
+  {n:'Capitano Moby',           g:'brainrot', tier:'Secret',      v:2000,   d:0   },
+  {n:'Cooki and Milki',         g:'brainrot', tier:'Secret',      v:2000,   d:0   },
+  {n:'Reinito Sleighito',       g:'brainrot', tier:'Secret',      v:2000,   d:0   },
+  {n:'Burguro And Fryuro',      g:'brainrot', tier:'Secret',      v:1600,   d:0   },
+  {n:'Spooky and Pumpky',       g:'brainrot', tier:'Secret',      v:1200,   d:0   },
+  {n:'Fragrama and Chocrama',   g:'brainrot', tier:'Secret',      v:1100,   d:0   },
+  {n:'Los Primos',              g:'brainrot', tier:'Secret',      v:1000,   d:0   },
+  /* Mid-tier Secret */
+  {n:'Garama and Madundung',    g:'brainrot', tier:'Secret',      v:980,    d:0   },
+  {n:'La Casa Boo',             g:'brainrot', tier:'Secret',      v:950,    d:0   },
+  {n:'Popcuru and Fizzuru',     g:'brainrot', tier:'Secret',      v:900,    d:0   },
+  {n:'Rosetti Tualetti',        g:'brainrot', tier:'Secret',      v:900,    d:0   },
+  {n:'Jolly Jolly Sahur',       g:'brainrot', tier:'Secret',      v:700,    d:0   },
+  {n:'La Secret Combinasion',   g:'brainrot', tier:'Secret',      v:550,    d:0   },
+  {n:'La Ginger Sekolah',       g:'brainrot', tier:'Secret',      v:500,    d:0   },
+  {n:'Chillin Chili',           g:'brainrot', tier:'Secret',      v:450,    d:0   },
+  {n:'Tang Tang Keletang',      g:'brainrot', tier:'Secret',      v:400,    d:0   },
+  {n:'Ketupat Kepat',           g:'brainrot', tier:'Secret',      v:360,    d:0   },
+  {n:'La Taco Combinasion',     g:'brainrot', tier:'Secret',      v:330,    d:0   },
+  {n:'Tictac Sahur',            g:'brainrot', tier:'Secret',      v:330,    d:0   },
+  {n:'Los Bros',                g:'brainrot', tier:'Secret',      v:320,    d:0   },
+  {n:'Los Spaghettis',          g:'brainrot', tier:'Secret',      v:300,    d:0   },
+  {n:'Chipso and Queso',        g:'brainrot', tier:'Secret',      v:300,    d:0   },
+  {n:'Los Jolly Combinasionas', g:'brainrot', tier:'Secret',      v:300,    d:0   },
+  {n:'Nuclearo Dinossauro',     g:'brainrot', tier:'Secret',      v:300,    d:0   },
+  {n:'Orcaledon',               g:'brainrot', tier:'Secret',      v:275,    d:0   },
+  {n:'Spaghetti Tualetti',      g:'brainrot', tier:'Secret',      v:275,    d:0   },
+  {n:'La Jolly Grande',         g:'brainrot', tier:'Secret',      v:260,    d:0   },
+  {n:'La Romantic Grande',      g:'brainrot', tier:'Secret',      v:250,    d:0   },
+  {n:'List List List Sahur',    g:'brainrot', tier:'Secret',      v:245,    d:0   },
+  {n:'Los Candies',             g:'brainrot', tier:'Secret',      v:245,    d:0   },
+  {n:'Money Money Puggy',       g:'brainrot', tier:'Secret',      v:240,    d:0   },
+  {n:'W or L',                  g:'brainrot', tier:'Secret',      v:220,    d:0   },
+  {n:'La Extinct Grande',       g:'brainrot', tier:'Secret',      v:200,    d:0   },
+  {n:'Gobblino Uniciclino',     g:'brainrot', tier:'Secret',      v:200,    d:0   },
+  {n:'Las Sis',                 g:'brainrot', tier:'Secret',      v:200,    d:0   },
+  {n:'Eviledon',                g:'brainrot', tier:'Secret',      v:200,    d:0   },
+  {n:'Los Puggies',             g:'brainrot', tier:'Secret',      v:150,    d:0   },
+  {n:'Brunito Marsito',         g:'brainrot', tier:'Secret',      v:150,    d:0   },
+  {n:'Money Money Reindeer',    g:'brainrot', tier:'Secret',      v:140,    d:0   },
+  {n:'La Spooky Grande',        g:'brainrot', tier:'Secret',      v:130,    d:0   },
+  {n:'Los 25',                  g:'brainrot', tier:'Secret',      v:130,    d:0   },
+  {n:'Chicleteira Cupideira',   g:'brainrot', tier:'Secret',      v:125,    d:0   },
+  {n:'Tuff Toucan',             g:'brainrot', tier:'Secret',      v:120,    d:0   },
+  {n:'Spinny Hammy',            g:'brainrot', tier:'Secret',      v:120,    d:0   },
+  {n:'Esok Sekolah',            g:'brainrot', tier:'Secret',      v:110,    d:0   },
+  {n:'Noo my Heart',            g:'brainrot', tier:'Secret',      v:100,    d:0   },
+  {n:'Swaggy Bros',             g:'brainrot', tier:'Secret',      v:100,    d:0   },
+  /* Low-tier Secret */
+  {n:'Bacuru and Egguru',       g:'brainrot', tier:'Secret',      v:90,     d:0   },
+  {n:'Los Spooky Combinasionas',g:'brainrot', tier:'Secret',      v:70,     d:0   },
+  {n:'La Grande Combinasion',   g:'brainrot', tier:'Secret',      v:70,     d:0   },
+  {n:'Chicleteira Noelteira',   g:'brainrot', tier:'Secret',      v:45,     d:0   },
+  {n:'Los Combinasionas',       g:'brainrot', tier:'Secret',      v:45,     d:0   },
+  {n:'Los 67',                  g:'brainrot', tier:'Secret',      v:40,     d:0   },
+  {n:'Mieteteira Bicicleteira', g:'brainrot', tier:'Secret',      v:35,     d:0   },
+  {n:'Chicleteira Bicicleteira',g:'brainrot', tier:'Secret',      v:35,     d:0   },
+  {n:'Chimnino',                g:'brainrot', tier:'Secret',      v:30,     d:0   },
+  {n:'Chicleteirina Bicicleteirina',g:'brainrot',tier:'Secret',   v:25,     d:0   },
+  {n:'Los Mobilis',             g:'brainrot', tier:'Secret',      v:25,     d:0   },
+  {n:'67',                      g:'brainrot', tier:'Secret',      v:20,     d:0   },
+  {n:'Rang Ring Bus',           g:'brainrot', tier:'Secret',      v:20,     d:0   },
+  {n:'Noo my Present',          g:'brainrot', tier:'Secret',      v:20,     d:0   },
+  {n:'Arcadopus',               g:'brainrot', tier:'Secret',      v:15,     d:0   },
+  {n:'Noo my Candy',            g:'brainrot', tier:'Secret',      v:15,     d:0   },
+  {n:'Pot Hotspot',             g:'brainrot', tier:'Secret',      v:15,     d:0   },
+  {n:'Los Quesadillas',         g:'brainrot', tier:'Secret',      v:15,     d:0   },
+  {n:'Burrito Bandito',         g:'brainrot', tier:'Secret',      v:15,     d:0   },
+  {n:'Chill Puppy',             g:'brainrot', tier:'Secret',      v:15,     d:0   },
+  {n:'Quesadillo Vampiro',      g:'brainrot', tier:'Secret',      v:10,     d:0   },
+  {n:'Ho Ho Ho Sahur',          g:'brainrot', tier:'Secret',      v:5,      d:0   },
+  {n:'Job Job Job Sahur',       g:'brainrot', tier:'Secret',      v:5,      d:0   },
+  {n:'Frankentteo',             g:'brainrot', tier:'Secret',      v:4,      d:0   },
+  {n:'Los Trios',               g:'brainrot', tier:'Secret',      v:4,      d:0   },
+  {n:'Karker Sahur',            g:'brainrot', tier:'Secret',      v:4,      d:0   },
+  {n:'Las Vaquitas Saturnitas', g:'brainrot', tier:'Secret',      v:4,      d:0   },
+  {n:'Extinct Matteo',          g:'brainrot', tier:'Secret',      v:4,      d:0   },
+  {n:'Pumpkini Spyderini',      g:'brainrot', tier:'Secret',      v:4,      d:0   },
+  {n:'Rocco Disco',             g:'brainrot', tier:'Secret',      v:4,      d:0   },
+  {n:'Reindeer Tralala',        g:'brainrot', tier:'Secret',      v:4,      d:0   },
+  {n:'Bisonte Giuppitere',      g:'brainrot', tier:'Secret',      v:2,      d:0   },
+  {n:'Karkerkar Kurkur',        g:'brainrot', tier:'Secret',      v:2,      d:0   },
+  {n:'Los Matteos',             g:'brainrot', tier:'Secret',      v:2,      d:0   },
+  {n:'Trenostruzzo Turbo 4000', g:'brainrot', tier:'Secret',      v:2,      d:0   },
+  {n:'Jackorilla',              g:'brainrot', tier:'Secret',      v:2,      d:0   },
+  {n:'Sammyni Spyderini',       g:'brainrot', tier:'Secret',      v:2,      d:0   },
+  {n:'Dul Dul Dul',             g:'brainrot', tier:'Secret',      v:2,      d:0   },
+  {n:'Blackhole Goat',          g:'brainrot', tier:'Secret',      v:2,      d:0   },
+  {n:'La Vacca Saturno Saturnita',g:'brainrot',tier:'Secret',     v:1,      d:0   },
+
+  /* ══════════════════════════════
+     GROW A GARDEN  —  pcgamesn / growagarden wiki  Dec 2025
+     Values in Sheckles (avg sell price per fruit)
+  ══════════════════════════════ */
+  /* Transcendent */
+  {n:'Octobloom',               g:'garden', tier:'Transcendent', v:288888, d:0    },
+  {n:'Zebrazinkle',             g:'garden', tier:'Transcendent', v:210000, d:2000 },
+  {n:'Crimson Thorn',           g:'garden', tier:'Transcendent', v:195000, d:1000 },
+  /* Divine */
+  {n:'Candy Blossom',           g:'garden', tier:'Divine',       v:150000, d:500  },
+  {n:'Cocomango',               g:'garden', tier:'Divine',       v:183465, d:0    },
+  {n:'Bone Blossom',            g:'garden', tier:'Divine',       v:130000, d:0    },
+  {n:'Maple Resin',             g:'garden', tier:'Divine',       v:120000, d:800  },
+  {n:'Brussels Sprout',         g:'garden', tier:'Divine',       v:126443, d:0    },
+  {n:'Potato',                  g:'garden', tier:'Divine',       v:93422,  d:0    },
+  /* Mythical */
+  {n:'Moon Blossom',            g:'garden', tier:'Mythical',     v:85000,  d:400  },
+  {n:'Briar Rose',              g:'garden', tier:'Mythical',     v:78634,  d:0    },
+  {n:'Burning Bud',             g:'garden', tier:'Mythical',     v:79254,  d:0    },
+  {n:'Giant Pinecone',          g:'garden', tier:'Mythical',     v:77143,  d:0    },
+  {n:'Ember Lily',              g:'garden', tier:'Mythical',     v:71533,  d:0    },
+  {n:'Broccoli',                g:'garden', tier:'Mythical',     v:58934,  d:0    },
+  {n:'Sugar Apple',             g:'garden', tier:'Mythical',     v:55658,  d:0    },
+  {n:'Mushroom',                g:'garden', tier:'Mythical',     v:142443, d:0    },
+  /* Legendary */
+  {n:'Hive Fruit',              g:'garden', tier:'Legendary',    v:45000,  d:200  },
+  {n:'Beanstalk',               g:'garden', tier:'Legendary',    v:18788,  d:0    },
+  {n:'Lilac',                   g:'garden', tier:'Legendary',    v:30000,  d:100  },
+  {n:'Nectarine',               g:'garden', tier:'Legendary',    v:31000,  d:0    },
+  {n:'Foxglove',                g:'garden', tier:'Legendary',    v:16000,  d:0    },
+  /* Rare */
+  {n:'Mango',                   g:'garden', tier:'Rare',         v:6308,   d:0    },
+  {n:'Grape',                   g:'garden', tier:'Rare',         v:7554,   d:0    },
+  {n:'Pepper',                  g:'garden', tier:'Rare',         v:7577,   d:0    },
+  {n:'Cacao',                   g:'garden', tier:'Rare',         v:10456,  d:0    },
+  /* Uncommon */
+  {n:'Dragon Fruit',            g:'garden', tier:'Uncommon',     v:4566,   d:0    },
+  {n:'Coconut',                 g:'garden', tier:'Uncommon',     v:2670,   d:0    },
+  {n:'Cactus',                  g:'garden', tier:'Uncommon',     v:3224,   d:0    },
+  {n:'Bamboo',                  g:'garden', tier:'Uncommon',     v:3944,   d:0    },
+  {n:'Pumpkin',                 g:'garden', tier:'Uncommon',     v:3854,   d:0    },
+  {n:'Watermelon',              g:'garden', tier:'Uncommon',     v:2905,   d:0    },
+  {n:'Daffodil',                g:'garden', tier:'Uncommon',     v:988,    d:0    },
+  {n:'Orange Tulip',            g:'garden', tier:'Uncommon',     v:792,    d:0    },
+  /* Common */
+  {n:'Apple',                   g:'garden', tier:'Common',       v:266,    d:0    },
+  {n:'Rose',                    g:'garden', tier:'Common',       v:4800,   d:0    },
+  {n:'Corn',                    g:'garden', tier:'Common',       v:44,     d:0    },
+  {n:'Tomato',                  g:'garden', tier:'Common',       v:35,     d:0    },
+  {n:'Blueberry',               g:'garden', tier:'Common',       v:21,     d:0    },
+  {n:'Carrot',                  g:'garden', tier:'Common',       v:22,     d:0    },
+  {n:'Strawberry',              g:'garden', tier:'Common',       v:19,     d:0    },
+
+  /* ══════════════════════════════
+     SHARP  —  msvalues.com
+  ══════════════════════════════ */
+  {n:'Void Dagger',             g:'sharp', tier:'Mythic',        v:850,    d:30   },
+  {n:'Phantom Edge',            g:'sharp', tier:'Legendary',     v:420,    d:-10  },
+  {n:'Golden Blade',            g:'sharp', tier:'Legendary',     v:380,    d:15   },
+  {n:'Obsidian Edge',           g:'sharp', tier:'Legendary',     v:320,    d:5    },
+  {n:'Spectral Blade',          g:'sharp', tier:'Legendary',     v:280,    d:0    },
+  {n:'Crystal Shard',           g:'sharp', tier:'Epic',          v:180,    d:5    },
+  {n:'Shadow Slice',            g:'sharp', tier:'Epic',          v:140,    d:0    },
+  {n:'Toxic Knife',             g:'sharp', tier:'Epic',          v:115,    d:3    },
+  {n:'Inferno Blade',           g:'sharp', tier:'Epic',          v:105,    d:0    },
+  {n:'Neon Knife',              g:'sharp', tier:'Rare',          v:75,     d:8    },
+  {n:'Electric Edge',           g:'sharp', tier:'Rare',          v:60,     d:2    },
+  {n:'Frozen Blade',            g:'sharp', tier:'Rare',          v:55,     d:0    },
+  {n:'Plasma Gun',              g:'sharp', tier:'Rare',          v:48,     d:1    },
+  {n:'Iron Blade',              g:'sharp', tier:'Uncommon',      v:25,     d:0    },
+  {n:'Steel Knife',             g:'sharp', tier:'Uncommon',      v:20,     d:0    },
+  {n:'Basic Gun',               g:'sharp', tier:'Common',        v:5,      d:0    },
+  {n:'Starter Knife',           g:'sharp', tier:'Common',        v:3,      d:0    },
 ];
 
 var me       = null;
@@ -1219,34 +2578,51 @@ function v_copy() {
   setTimeout(()=>{ btn.innerHTML='<svg class="ico" style="width:12px;height:12px" aria-hidden="true"><use href="#i-copy"/></svg> Copy'; btn.classList.remove('ok'); },2000);
 }
 
+async function proxyFetch(url) {
+  /* Try multiple CORS proxies in order until one works */
+  var proxies = [
+    u => 'https://corsproxy.io/?' + encodeURIComponent(u),
+    u => 'https://api.allorigins.win/get?url=' + encodeURIComponent(u),
+    u => 'https://thingproxy.freeboard.io/fetch/' + u,
+  ];
+  for(var i=0;i<proxies.length;i++){
+    try {
+      var r = await fetch(proxies[i](url), {signal: AbortSignal.timeout(8000)});
+      if(!r.ok) continue;
+      var txt = await r.text();
+      /* allorigins wraps in {contents:"..."} */
+      if(txt.startsWith('{"contents"')) {
+        var j = JSON.parse(txt);
+        return JSON.parse(j.contents);
+      }
+      return JSON.parse(txt);
+    } catch(e){ continue; }
+  }
+  throw new Error('Could not reach Roblox — check your internet and try again.');
+}
+
 async function v2() {
   var btn=document.getElementById('v-verifybtn');
   var err=document.getElementById('ve2');
   btn.disabled=true; btn.innerHTML='<span class="spin"></span> Checking bio…';
   err.style.display='none';
   try {
-    /* Use allorigins CORS proxy to hit Roblox API */
-    var proxyBase = 'https://api.allorigins.win/get?url=';
+    /* Step 1: search for username to get user ID */
+    var searchData = await proxyFetch('https://users.roblox.com/v1/users/search?keyword='+encodeURIComponent(vUser)+'&limit=10');
+    var match = (searchData.data||[]).find(u=>u.name.toLowerCase()===vUser.toLowerCase());
+    if(!match) {
+      /* fallback: try exact username lookup */
+      var lookupData = await proxyFetch('https://api.roblox.com/users/get-by-username?username='+encodeURIComponent(vUser));
+      if(!lookupData || lookupData.errorMessage) throw new Error('Username not found on Roblox. Check the spelling.');
+      match = { id: lookupData.Id, name: lookupData.Username };
+    }
 
-    /* Step 1: resolve username → user ID */
-    var usersUrl = encodeURIComponent('https://users.roblox.com/v1/usernames/users');
-    /* allorigins only does GET so we use the search endpoint instead */
-    var searchUrl = encodeURIComponent('https://users.roblox.com/v1/users/search?keyword='+encodeURIComponent(vUser)+'&limit=10');
-    var r1 = await fetch(proxyBase + searchUrl);
-    var j1 = await r1.json();
-    var d1 = JSON.parse(j1.contents);
-    var match = (d1.data||[]).find(u=>u.name.toLowerCase()===vUser.toLowerCase());
-    if(!match) throw new Error('Username not found on Roblox. Check the spelling.');
+    /* Step 2: fetch profile to read bio */
+    var profile = await proxyFetch('https://users.roblox.com/v1/users/'+match.id);
+    var bio = (profile.description||'').toLowerCase();
+    if(!bio.includes(vPhrase.toLowerCase())) throw new Error("Code not found in your bio. Make sure you saved — or hit 'Get New Code' for a fresh one.");
 
-    /* Step 2: fetch user profile for bio */
-    var profileUrl = encodeURIComponent('https://users.roblox.com/v1/users/'+match.id);
-    var r2 = await fetch(proxyBase + profileUrl);
-    var j2 = await r2.json();
-    var d2 = JSON.parse(j2.contents);
-    var bio = (d2.description||'').toLowerCase();
-    if(!bio.includes(vPhrase.toLowerCase())) throw new Error("Code not found in your bio. Make sure you saved after pasting — or click 'Get New Code' and try a fresh one.");
-
-    me = { user: d2.displayName||d2.name, uid: String(match.id), ts: Date.now() };
+    me = { user: profile.displayName||profile.name||match.name, uid: String(match.id), ts: Date.now() };
     saveUser(me); updateNav();
     document.getElementById('v-okmsg').textContent = 'Welcome, '+me.user+'!';
     vstep(3);
