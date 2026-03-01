@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BloxUse — Roblox Trading</title>
+<title>TradeVault — Roblox Trading</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
@@ -664,7 +664,7 @@ textarea.fi { resize: vertical; min-height: 70px; }
         <div class="phrase-box">
           <div style="flex:1">
             <span class="phrase-txt" id="v-phrase">—</span>
-            <div class="phrase-word-count" id="v-wc">10 words</div>
+            <div class="phrase-word-count" id="v-wc">7 words</div>
           </div>
           <button class="cp-btn" id="v-cpbtn" onclick="v_copy()"><svg class="ico" style="width:12px;height:12px" aria-hidden="true"><use href="#i-copy"/></svg> Copy</button>
         </div>
@@ -915,18 +915,18 @@ var lItems   = [];
 var vPhrase  = null;
 var vUser    = null;
 
-/* 100 simple common words for 20-word phrase generation */
+/* Easy everyday words for 7-word phrase generation */
 var WORDS = [
-  'cat','dog','sun','cup','hat','box','red','big','run','jump',
-  'blue','tree','fish','ball','cake','door','fire','gold','hand','lake',
-  'moon','note','open','park','rock','rose','ship','star','swim','town',
-  'wave','wind','bird','boot','burn','call','camp','card','cart','cave',
-  'chip','clap','clay','clip','club','coat','coin','cook','cool','cord',
-  'corn','crab','crop','cube','dark','dash','dawn','deep','desk','dirt',
-  'disk','dive','dock','drag','draw','drop','drum','dust','echo','edge',
-  'farm','fast','flag','flat','flip','flow','foam','fold','fork','frog',
-  'fume','glow','glue','grab','gray','grin','grip','grow','gulf','hair',
-  'half','hall','hard','heat','heel','hill','hint','home','hook','horn'
+  'water','cookie','milk','taco','mochi','dumpling','stew','pizza','bread','juice',
+  'apple','grape','mango','peach','lemon','berry','melon','plum','lime','pear',
+  'honey','sugar','butter','cream','waffle','donut','bagel','nacho','ramen','sushi',
+  'chips','salsa','guac','wrap','toast','boba','soup','rice','bean','corn',
+  'egg','bacon','syrup','jam','sauce','noodle','pretzel','cupcake','brownie','fudge',
+  'latte','cocoa','tea','soda','shake','smoothie','cider','punch','candy','gummy',
+  'pasta','burger','hotdog','nugget','fry','salad','burrito','quesadilla','panini','kebab',
+  'churro','crepe','eclair','gelato','sorbet','pudding','cobbler','scone','biscuit','gravy',
+  'clam','shrimp','lobster','crab','fish','squid','oyster','mussel','anchovy','sardine',
+  'carrot','potato','onion','garlic','pepper','tomato','lettuce','spinach','broccoli','kale'
 ];
 
 var SESS_KEY = 'tv_user_v2';
@@ -1207,7 +1207,7 @@ function genPhrase() {
     var j=Math.floor(Math.random()*(i+1));
     var tmp=pool[i]; pool[i]=pool[j]; pool[j]=tmp;
   }
-  return pool.slice(0,10).join(' ');
+  return pool.slice(0,7).join(' ');
 }
 
 function v_copy() {
