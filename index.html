@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TradeVault — Roblox Trading</title>
+<title>BloxUse — Roblox Trading</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
@@ -664,7 +664,7 @@ textarea.fi { resize: vertical; min-height: 70px; }
         <div class="phrase-box">
           <div style="flex:1">
             <span class="phrase-txt" id="v-phrase">—</span>
-            <div class="phrase-word-count" id="v-wc">20 words</div>
+            <div class="phrase-word-count" id="v-wc">10 words</div>
           </div>
           <button class="cp-btn" id="v-cpbtn" onclick="v_copy()"><svg class="ico" style="width:12px;height:12px" aria-hidden="true"><use href="#i-copy"/></svg> Copy</button>
         </div>
@@ -677,6 +677,7 @@ textarea.fi { resize: vertical; min-height: 70px; }
         <button class="btn-p" id="v-verifybtn" onclick="v2()">
           <svg class="ico" style="width:14px;height:14px;margin-right:6px" aria-hidden="true"><use href="#i-shield"/></svg>Verify Bio
         </button>
+        <button class="btn-s" style="margin-top:6px" onclick="v_newcode()"><svg class="ico" style="width:12px;height:12px;margin-right:5px" aria-hidden="true"><use href="#i-plus"/></svg>Get New Code</button>
         <button class="btn-s" onclick="vstep(1)"><svg class="ico" style="width:12px;height:12px;margin-right:5px" aria-hidden="true"><use href="#i-al"/></svg>Back</button>
         <div class="ferr" id="ve2" style="display:none;margin-top:8px"></div>
       </div>
@@ -914,18 +915,18 @@ var lItems   = [];
 var vPhrase  = null;
 var vUser    = null;
 
-/* 100 unique words for 20-word phrase generation */
+/* 100 simple common words for 20-word phrase generation */
 var WORDS = [
-  'amber','blaze','cedar','drift','ember','flint','grove','haven','ivory','jade',
-  'kite','lance','maple','nova','opal','petal','quill','ridge','slate','thorn',
-  'ultra','vapor','walnut','xenon','yield','zenith','anchor','basin','coral','delta',
-  'ether','forge','gust','hedge','inlet','jest','knoll','ledge','mist','nook',
-  'orbit','prism','quartz','raven','spire','tower','umbra','vault','wedge','xerox',
-  'acorn','briar','clover','dune','eagle','fable','glade','hollow','island','jasper',
-  'kelp','lunar','marsh','nimbus','olive','peak','quarry','river','summit','trail',
-  'urban','valley','willow','axle','birch','canyon','depot','fern','glacier','hamlet',
-  'iris','juniper','karst','linden','meadow','nectar','obsid','plover','quasar','reef',
-  'strata','tundra','upland','vortex','wicker','yonder','zephyr','alder','blight','cobalt'
+  'cat','dog','sun','cup','hat','box','red','big','run','jump',
+  'blue','tree','fish','ball','cake','door','fire','gold','hand','lake',
+  'moon','note','open','park','rock','rose','ship','star','swim','town',
+  'wave','wind','bird','boot','burn','call','camp','card','cart','cave',
+  'chip','clap','clay','clip','club','coat','coin','cook','cool','cord',
+  'corn','crab','crop','cube','dark','dash','dawn','deep','desk','dirt',
+  'disk','dive','dock','drag','draw','drop','drum','dust','echo','edge',
+  'farm','fast','flag','flat','flip','flow','foam','fold','fork','frog',
+  'fume','glow','glue','grab','gray','grin','grip','grow','gulf','hair',
+  'half','hall','hard','heat','heel','hill','hint','home','hook','horn'
 ];
 
 var SESS_KEY = 'tv_user_v2';
@@ -1206,7 +1207,7 @@ function genPhrase() {
     var j=Math.floor(Math.random()*(i+1));
     var tmp=pool[i]; pool[i]=pool[j]; pool[j]=tmp;
   }
-  return pool.slice(0,20).join(' ');
+  return pool.slice(0,10).join(' ');
 }
 
 function v_copy() {
@@ -1221,21 +1222,31 @@ function v_copy() {
 async function v2() {
   var btn=document.getElementById('v-verifybtn');
   var err=document.getElementById('ve2');
-  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Verifying…';
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Checking bio…';
   err.style.display='none';
   try {
-    var r1 = await fetch('https://users.roblox.com/v1/usernames/users',{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({usernames:[vUser],excludeBannedUsers:true})
-    });
-    var d1 = await r1.json();
-    if(!d1.data||!d1.data.length) throw new Error('Username not found on Roblox. Check the spelling.');
-    var ru = d1.data[0];
-    var r2 = await fetch('https://users.roblox.com/v1/users/'+ru.id);
-    var d2 = await r2.json();
+    /* Use allorigins CORS proxy to hit Roblox API */
+    var proxyBase = 'https://api.allorigins.win/get?url=';
+
+    /* Step 1: resolve username → user ID */
+    var usersUrl = encodeURIComponent('https://users.roblox.com/v1/usernames/users');
+    /* allorigins only does GET so we use the search endpoint instead */
+    var searchUrl = encodeURIComponent('https://users.roblox.com/v1/users/search?keyword='+encodeURIComponent(vUser)+'&limit=10');
+    var r1 = await fetch(proxyBase + searchUrl);
+    var j1 = await r1.json();
+    var d1 = JSON.parse(j1.contents);
+    var match = (d1.data||[]).find(u=>u.name.toLowerCase()===vUser.toLowerCase());
+    if(!match) throw new Error('Username not found on Roblox. Check the spelling.');
+
+    /* Step 2: fetch user profile for bio */
+    var profileUrl = encodeURIComponent('https://users.roblox.com/v1/users/'+match.id);
+    var r2 = await fetch(proxyBase + profileUrl);
+    var j2 = await r2.json();
+    var d2 = JSON.parse(j2.contents);
     var bio = (d2.description||'').toLowerCase();
-    if(!bio.includes(vPhrase.toLowerCase())) throw new Error("Phrase not found in your bio. Make sure you saved your Roblox profile after pasting.");
-    me = { user: d2.displayName||d2.name, uid: String(ru.id), ts: Date.now() };
+    if(!bio.includes(vPhrase.toLowerCase())) throw new Error("Code not found in your bio. Make sure you saved after pasting — or click 'Get New Code' and try a fresh one.");
+
+    me = { user: d2.displayName||d2.name, uid: String(match.id), ts: Date.now() };
     saveUser(me); updateNav();
     document.getElementById('v-okmsg').textContent = 'Welcome, '+me.user+'!';
     vstep(3);
@@ -1245,6 +1256,18 @@ async function v2() {
     err.style.display='block';
   }
   btn.disabled=false; btn.innerHTML='<svg class="ico" style="width:14px;height:14px;margin-right:6px" aria-hidden="true"><use href="#i-shield"/></svg>Verify Bio';
+}
+
+function v_newcode() {
+  vPhrase = genPhrase();
+  document.getElementById('v-phrase').textContent = vPhrase;
+  var wc = vPhrase.trim().split(/\s+/).length;
+  document.getElementById('v-wc').textContent = wc + ' words';
+  var btn = document.getElementById('v-cpbtn');
+  btn.innerHTML='<svg class="ico" style="width:12px;height:12px" aria-hidden="true"><use href="#i-copy"/></svg> Copy';
+  btn.classList.remove('ok');
+  document.getElementById('ve2').style.display='none';
+  toast('New code generated','ok');
 }
 
 /* ══ POST TRADE ══ */
