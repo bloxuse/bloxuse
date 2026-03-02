@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BloxUse</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07070a;--bg2:#0b0b0f;--bg3:#0f0f14;
+  --card:#111118;--card2:#17171f;--card3:#1e1e28;
+  --ln:rgba(255,255,255,0.055);--ln2:rgba(255,255,255,0.09);--ln3:rgba(255,255,255,0.14);
+  --t:#eeeaf8;--t2:#9996ab;--t3:#58566a;--t4:#34324a;
+  --p:#9b5cf5;--p2:#c084fc;--p-bg:rgba(155,92,245,0.09);--p-ln:rgba(155,92,245,0.28);
+  --green:#26d98a;--green-bg:rgba(38,217,138,0.08);--green-ln:rgba(38,217,138,0.22);
+  --red:#f5504a;--red-bg:rgba(245,80,74,0.08);--red-ln:rgba(245,80,74,0.22);
+  --gold:#f0b429;--gold-bg:rgba(240,180,41,0.08);--gold-ln:rgba(240,180,41,0.22);
+  --sans:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:8px;--r2:12px;--r3:16px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--t);font-family:var(--sans);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::after{content:'';position:fixed;top:0;left:50%;transform:translateX(-50%);width:600px;height:300px;pointer-events:none;z-index:0;background:radial-gradient(ellipse at center top,rgba(155,92,245,0.06) 0%,transparent 65%)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--card3);border-radius:3px}
+
+/* NAV */
+#nav{position:fixed;inset:0 0 auto 0;height:56px;z-index:300;background:rgba(7,7,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--ln);display:flex;align-items:center;padding:0 18px;gap:0}
+.n-brand{display:flex;align-items:center;gap:9px;text-decoration:none;margin-right:20px;flex-shrink:0}
+.n-mark{width:28px;height:28px;border-radius:7px;background:linear-gradient(140deg,#9b5cf5,#6d28d9);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;box-shadow:0 0 18px rgba(155,92,245,0.35)}
+.n-word{font-size:15px;font-weight:800;letter-spacing:-0.3px;color:var(--t)}
+.n-word em{color:var(--p2);font-style:normal}
+.n-tabs{display:flex;align-items:center;gap:1px;flex:1}
+.n-tab{padding:5px 13px;border-radius:7px;font-size:13px;font-weight:500;color:var(--t3);cursor:pointer;border:none;background:none;font-family:var(--sans);transition:all .12s;display:inline-flex;align-items:center;gap:5px}
+.n-tab:hover{color:var(--t2);background:var(--card)}
+.n-tab.on{color:var(--t);background:var(--card2);font-weight:600}
+.n-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.n-signin{display:flex;align-items:center;gap:7px;padding:7px 15px;border-radius:var(--r);background:var(--card2);border:1px solid var(--ln2);color:var(--t);font-family:var(--sans);font-size:12px;font-weight:600;cursor:pointer;transition:all .12s}
+.n-signin:hover{border-color:var(--p-ln);background:var(--p-bg);color:var(--p2)}
+.n-user{display:flex;align-items:center;gap:8px;padding:4px 13px 4px 4px;background:var(--card2);border:1px solid var(--ln2);border-radius:40px;cursor:pointer;font-size:13px;font-weight:600;transition:border-color .12s}
+.n-user:hover{border-color:var(--ln3)}
+.n-avi{width:28px;height:28px;border-radius:50%;background:var(--card3);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--p2)}
+.n-avi img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* APP */
+#app{padding-top:56px;position:relative;z-index:1}
+.view{display:none}
+.view.on{display:flex;min-height:calc(100vh - 56px)}
+#view-profile.on,#view-owner.on,#view-calc.on{display:block}
+
+/* SIDEBAR */
+.sidebar{width:210px;flex-shrink:0;border-right:1px solid var(--ln);background:var(--bg2);padding:14px 10px;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto}
+.sb-head{font-size:9px;font-weight:700;color:var(--t4);text-transform:uppercase;letter-spacing:1.1px;padding:0 8px;margin-bottom:5px;font-family:var(--mono)}
+.sb-btn{display:flex;align-items:center;gap:8px;width:100%;padding:7px 9px;border-radius:var(--r);border:none;background:none;color:var(--t3);font-family:var(--sans);font-size:12px;font-weight:500;cursor:pointer;transition:all .12s;text-align:left;margin-bottom:1px}
+.sb-btn:hover{color:var(--t2);background:var(--card)}
+.sb-btn.on{color:var(--t);background:var(--card2);font-weight:600}
+.sb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sb-div{height:1px;background:var(--ln);margin:10px 4px}
+
+/* MAIN */
+.main{flex:1;padding:24px 28px;max-width:900px;min-width:0}
+.top-bar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.top-title{font-size:20px;font-weight:800;letter-spacing:-0.4px}
+.top-sub{font-size:11px;color:var(--t3);font-family:var(--mono);margin-top:3px}
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.s-wrap{position:relative;flex:1;min-width:180px}
+.s-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--t3);pointer-events:none}
+.s-inp{width:100%;background:var(--card);border:1px solid var(--ln2);border-radius:var(--r);padding:8px 10px 8px 32px;color:var(--t);font-family:var(--sans);font-size:12px}
+.s-inp:focus{outline:none;border-color:var(--p-ln)}
+.fsel{background:var(--card);border:1px solid var(--ln2);border-radius:var(--r);padding:7px 10px;color:var(--t);font-family:var(--sans);font-size:12px;cursor:pointer}
+.fsel:focus{outline:none;border-color:var(--p-ln)}
+.board-meta{font-size:10px;color:var(--t3);font-family:var(--mono);margin-bottom:10px}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.tc{background:var(--card);border:1px solid var(--ln);border-radius:var(--r2);padding:14px;cursor:pointer;transition:border-color .12s,transform .1s;animation:fadeup .3s ease both}
+.tc:hover{border-color:var(--ln2);transform:translateY(-1px)}
+@keyframes fadeup{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.tc-top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.tc-avi{width:32px;height:32px;border-radius:50%;background:var(--card3);overflow:hidden;flex-shrink:0;border:2px solid var(--ln2)}
+.tc-avi img{width:100%;height:100%;object-fit:cover;display:block}
+.tc-uname{font-size:12px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tc-game{font-size:9px;font-family:var(--mono);padding:2px 7px;border-radius:4px;border:1px solid;font-weight:600}
+.tc-lbl{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:0.8px;font-family:var(--mono);margin-bottom:4px}
+.tc-items{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.tc-item{font-size:10px;font-family:var(--mono);padding:2px 7px;border-radius:5px;background:var(--bg3);border:1px solid var(--ln);color:var(--t2)}
+.tc-mid{text-align:center;color:var(--t4);font-size:11px;margin:4px 0}
+.tc-note{font-size:11px;color:var(--t3);font-style:italic;margin-top:4px;border-top:1px solid var(--ln);padding-top:6px}
+.tc-time{font-size:9px;color:var(--t4);font-family:var(--mono);margin-top:6px}
+.tc-cta{width:100%;margin-top:8px;padding:7px;border-radius:var(--r);background:var(--p-bg);border:1px solid var(--p-ln);color:var(--p2);font-family:var(--sans);font-size:11px;font-weight:700;cursor:pointer;transition:all .12s}
+.tc-cta:hover{background:var(--p);color:#fff}
+.empty{text-align:center;padding:60px 20px;color:var(--t3)}
+.empty-ico{font-size:32px;margin-bottom:12px;opacity:.3}
+.empty h3{font-size:14px;font-weight:600;margin-bottom:6px;color:var(--t2)}
+.empty p{font-size:12px;font-family:var(--mono)}
+
+/* VALUE GUIDE */
+.vc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.vc{background:var(--card);border:1px solid var(--ln);border-radius:var(--r2);padding:12px 14px;transition:border-color .12s}
+.vc:hover{border-color:var(--ln2)}
+.vc-name{font-size:12px;font-weight:700;margin-bottom:4px}
+.vc-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.vc-val{font-size:14px;font-weight:800;font-family:var(--mono);color:var(--p2)}
+.vc-d{font-size:10px;font-family:var(--mono);display:flex;align-items:center;gap:2px}
+.vc-d.up{color:var(--green)}.vc-d.dn{color:var(--red)}.vc-d.flat{color:var(--t4)}
+.vc-tier{font-size:9px;font-family:var(--mono);color:var(--t3);margin-top:2px}
+.vc-src{font-size:9px;color:var(--t4);font-family:var(--mono);margin-top:4px}
+
+/* PROFILE */
+.p-banner{height:120px;background:linear-gradient(135deg,#130b2e,#07070a 60%,#0d0b14);border-bottom:1px solid var(--ln);position:relative}
+.p-body{padding:20px 28px}
+.p-avi{width:72px;height:72px;border-radius:50%;border:3px solid var(--bg);background:var(--card3);overflow:hidden;margin-top:-36px;margin-bottom:10px}
+.p-avi img{width:100%;height:100%;object-fit:cover;display:block}
+.p-name{font-size:20px;font-weight:800;letter-spacing:-0.4px}
+.p-sub{font-size:11px;color:var(--t3);font-family:var(--mono);margin-top:2px}
+.p-stat{text-align:center;padding:14px}
+.p-stat-n{font-size:20px;font-weight:800;font-family:var(--mono);color:var(--p2)}
+.p-stat-l{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:0.7px;font-family:var(--mono);margin-top:2px}
+.p-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;margin-top:14px}
+
+/* BUTTONS */
+.btn-p{width:100%;padding:10px;border-radius:var(--r);background:var(--p);border:none;color:#fff;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-p:hover{background:var(--p2);filter:brightness(1.1)}
+.btn-p:disabled{opacity:.5;cursor:not-allowed}
+.btn-s{width:100%;padding:9px;border-radius:var(--r);background:var(--card2);border:1px solid var(--ln2);color:var(--t2);font-family:var(--sans);font-size:12px;font-weight:600;cursor:pointer;transition:all .12s;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:5px}
+.btn-s:hover{border-color:var(--ln3);color:var(--t)}
+
+/* MODALS */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:800;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(18px)}
+.overlay.open{display:flex}
+.modal{background:var(--card);border:1px solid var(--ln2);border-radius:var(--r3);width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.mhd{display:flex;align-items:flex-start;justify-content:space-between;padding:20px 20px 0}
+.mh-t{font-size:15px;font-weight:800}
+.mh-s{font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:3px}
+.mc{background:var(--card3);border:1px solid var(--ln2);border-radius:6px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t3);flex-shrink:0}
+.mc:hover{color:var(--t);border-color:var(--ln3)}
+.mb{padding:16px 20px 20px}
+.fg{margin-bottom:12px}
+.fl{display:block;font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:0.7px;font-family:var(--mono);margin-bottom:5px}
+.fi{width:100%;background:var(--bg3);border:1px solid var(--ln2);border-radius:var(--r);padding:9px 12px;color:var(--t);font-family:var(--sans);font-size:13px}
+.fi:focus{outline:none;border-color:var(--p-ln)}
+.ferr{font-size:11px;color:var(--red);font-family:var(--mono);background:var(--red-bg);border:1px solid var(--red-ln);border-radius:var(--r);padding:8px 10px;margin-top:6px}
+.spin{width:12px;height:12px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* VERIFY STEPS */
+.vstep{display:none}.vstep.on{display:block}
+.step-pip{width:22px;height:22px;border-radius:50%;background:var(--p-bg);border:1px solid var(--p-ln);color:var(--p2);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;font-family:var(--mono);margin-bottom:12px}
+.phrase-box{background:var(--bg3);border:1px solid var(--p-ln);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.phrase-txt{font-family:var(--mono);font-size:13px;color:var(--p2);font-weight:600;word-break:break-all}
+.phrase-word-count{font-size:9px;color:var(--t4);font-family:var(--mono);margin-top:4px}
+.cp-btn{background:var(--card2);border:1px solid var(--ln2);border-radius:6px;padding:6px 10px;font-size:11px;font-weight:600;color:var(--t2);cursor:pointer;flex-shrink:0;display:flex;align-items:center;gap:4px;font-family:var(--sans);transition:all .12s}
+.cp-btn:hover{border-color:var(--p-ln);color:var(--p2)}
+.cp-btn.ok{border-color:var(--green-ln);color:var(--green);background:var(--green-bg)}
+.how-to{font-size:11px;font-family:var(--mono);color:var(--t3);background:var(--bg3);border-radius:var(--r);padding:10px 12px;line-height:2;margin-bottom:12px}
+.ok-center{text-align:center;padding:20px 0}
+.ok-ico{color:var(--green);margin-bottom:12px}
+.ok-title{font-size:20px;font-weight:800;margin-bottom:6px}
+.ok-sub{font-size:12px;color:var(--t2);font-family:var(--mono);margin-bottom:18px}
+
+/* POST TRADE */
+.gg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.gopt{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--r);background:var(--card2);border:1px solid var(--ln2);color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;transition:all .12s}
+.gopt:hover{border-color:var(--ln3);color:var(--t)}
+.gopt.on{border-color:var(--p-ln);background:var(--p-bg);color:var(--p2)}
+.gdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ttype{display:flex;gap:6px;margin-bottom:12px}
+.tt{flex:1;padding:7px;border-radius:var(--r);background:var(--card2);border:1px solid var(--ln2);color:var(--t2);font-size:11px;font-weight:700;cursor:pointer;text-align:center;transition:all .12s}
+.tt:hover{color:var(--t)}
+.tt.on{background:var(--p-bg);border-color:var(--p-ln);color:var(--p2)}
+.chip-wrap{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;min-height:28px}
+.chip{display:flex;align-items:center;gap:4px;padding:3px 8px;background:var(--bg3);border:1px solid var(--ln);border-radius:5px;font-size:11px;font-family:var(--mono)}
+.chip-rm{background:none;border:none;color:var(--t4);cursor:pointer;font-size:13px;padding:0 2px;line-height:1}
+.chip-rm:hover{color:var(--red)}
+.item-inp-row{display:flex;gap:6px}
+.item-inp-row .fi{flex:1}
+.item-inp-row .btn-add{width:auto;padding:9px 14px;white-space:nowrap;background:var(--card2);border:1px solid var(--ln2);border-radius:var(--r);color:var(--t2);font-family:var(--sans);font-size:12px;font-weight:600;cursor:pointer;transition:all .12s}
+.item-inp-row .btn-add:hover{border-color:var(--p-ln);color:var(--p2)}
+
+/* DETAIL MODAL */
+.dt-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.dt-avi{width:42px;height:42px;border-radius:50%;background:var(--card3);overflow:hidden;flex-shrink:0;border:2px solid var(--ln2)}
+.dt-avi img{width:100%;height:100%;object-fit:cover;display:block}
+.dt-name{font-size:14px;font-weight:800}
+.dt-meta{font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:2px}
+.dt-section{margin-bottom:12px}
+.dt-lbl{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:0.8px;font-family:var(--mono);margin-bottom:5px}
+.dt-items{display:flex;flex-wrap:wrap;gap:4px}
+.dt-item{font-size:11px;font-family:var(--mono);padding:3px 9px;border-radius:5px;background:var(--bg3);border:1px solid var(--ln)}
+
+/* OWNER PORTAL */
+.owner-card{background:var(--card);border:1px solid var(--ln);border-radius:var(--r2);padding:14px 16px;margin-bottom:8px;transition:border-color .12s}
+.owner-card:hover{border-color:var(--ln2)}
+.ow-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.ow-user{display:flex;align-items:center;gap:10px}
+.ow-avi{width:36px;height:36px;border-radius:50%;background:var(--card3);overflow:hidden;flex-shrink:0;border:2px solid var(--ln2)}
+.ow-avi img{width:100%;height:100%;object-fit:cover;display:block}
+.ow-name{font-size:13px;font-weight:700}
+.ow-meta{font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:2px}
+.ow-actions{display:flex;gap:6px;flex-shrink:0}
+.btn-ban{padding:5px 12px;border-radius:6px;background:var(--red-bg);border:1px solid var(--red-ln);color:var(--red);font-family:var(--sans);font-size:11px;font-weight:700;cursor:pointer;transition:all .12s}
+.btn-ban:hover{background:var(--red);color:#fff}
+.btn-unban{padding:5px 12px;border-radius:6px;background:var(--green-bg);border:1px solid var(--green-ln);color:var(--green);font-family:var(--sans);font-size:11px;font-weight:700;cursor:pointer;transition:all .12s}
+.btn-unban:hover{background:var(--green);color:#000}
+.ow-trades{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.ow-trade-chip{font-size:10px;font-family:var(--mono);padding:3px 8px;border-radius:5px;background:var(--bg3);border:1px solid var(--ln);color:var(--t2);cursor:pointer;display:flex;align-items:center;gap:4px}
+.ow-trade-chip:hover{border-color:var(--red-ln);color:var(--red)}
+.banned-tag{font-size:9px;font-family:var(--mono);font-weight:700;padding:2px 7px;border-radius:4px;background:var(--red-bg);border:1px solid var(--red-ln);color:var(--red);margin-left:6px}
+.owner-stat{background:var(--card);border:1px solid var(--ln);border-radius:var(--r2);padding:16px;text-align:center}
+.owner-stat-n{font-size:26px;font-weight:800;font-family:var(--mono);color:var(--p2)}
+.owner-stat-l{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;font-family:var(--mono);margin-top:4px}
+
+/* CALCULATOR */
+.calc-search-wrap{position:relative;margin-bottom:8px}
+.calc-drop{position:absolute;top:100%;left:0;right:0;background:var(--card2);border:1px solid var(--ln2);border-radius:var(--r);z-index:50;max-height:200px;overflow-y:auto;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.calc-drop.open{display:block}
+.calc-drop-item{padding:8px 12px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--ln)}
+.calc-drop-item:last-child{border-bottom:none}
+.calc-drop-item:hover{background:var(--card3)}
+.calc-drop-val{font-family:var(--mono);font-size:11px;color:var(--p2)}
+.calc-items{min-height:100px;display:flex;flex-direction:column;gap:6px}
+.calc-empty{color:var(--t4);font-size:11px;font-family:var(--mono);padding:18px 0;text-align:center}
+.calc-item-row{background:var(--card);border:1px solid var(--ln);border-radius:var(--r);padding:7px 10px;display:flex;align-items:center;gap:6px}
+.calc-item-name{font-size:12px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.calc-item-val{font-family:var(--mono);font-size:11px;color:var(--p2);flex-shrink:0}
+.calc-item-qty{width:38px;background:var(--bg3);border:1px solid var(--ln2);border-radius:5px;color:var(--t);font-family:var(--mono);font-size:11px;padding:3px 5px;text-align:center}
+.calc-item-rm{background:none;border:none;color:var(--t4);cursor:pointer;font-size:15px;line-height:1;padding:0 3px;flex-shrink:0}
+.calc-item-rm:hover{color:var(--red)}
+.calc-total{font-family:var(--mono);font-size:12px;font-weight:700;padding:3px 10px;border-radius:6px}
+
+/* VALUE EDITOR */
+.ve-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--ln)}
+.ve-row:last-child{border-bottom:none}
+.ve-name{flex:1;font-size:12px;font-weight:600}
+.ve-input{width:80px;background:var(--bg3);border:1px solid var(--ln2);border-radius:5px;color:var(--t);font-family:var(--mono);font-size:11px;padding:4px 7px;text-align:right}
+.ve-input:focus{outline:none;border-color:var(--p-ln)}
+.ve-del{background:none;border:none;color:var(--t4);cursor:pointer;padding:4px 7px;border-radius:5px;font-size:12px}
+.ve-del:hover{color:var(--red);background:var(--red-bg)}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--ln2);border-radius:var(--r);padding:9px 18px;font-size:12px;font-family:var(--mono);z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+#toast.show{opacity:1}
+#toast.ok{border-color:var(--green-ln);color:var(--green)}
+#toast.bad{border-color:var(--red-ln);color:var(--red)}
+
+/* ICO */
+.ico{display:inline-block;vertical-align:middle;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<!-- SVG ICONS -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-calc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></symbol>
+  <symbol id="i-login" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-checkc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+  <symbol id="i-ar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+  <symbol id="i-al" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></symbol>
+  <symbol id="i-cu" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8l-6 7h12z"/></symbol>
+  <symbol id="i-cd" viewBox="0 0 24 24" fill="currentColor"><path d="M12 16l6-7H6z"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+</svg>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="n-brand" href="#" id="brand-link">
+    <div class="n-mark">BU</div>
+    <span class="n-word">Blox<em>Use</em></span>
+  </a>
+  <div class="n-tabs">
+    <button class="n-tab on" id="nt-trades" onclick="goto('trades')">
+      <svg class="ico" style="width:13px;height:13px"><use href="#i-grid"/></svg>Trade Board
+    </button>
+    <button class="n-tab" id="nt-values" onclick="goto('values')">
+      <svg class="ico" style="width:13px;height:13px"><use href="#i-chart"/></svg>Value Guide
+    </button>
+    <button class="n-tab" id="nt-calc" onclick="goto('calc')">
+      <svg class="ico" style="width:13px;height:13px"><use href="#i-calc"/></svg>Calculator
+    </button>
+    <button class="n-tab" id="nt-profile" onclick="goto('profile')">
+      <svg class="ico" style="width:13px;height:13px"><use href="#i-user"/></svg>Profile
+    </button>
+    <button class="n-tab" id="nt-owner" style="display:none;color:var(--red)" onclick="goto('owner')">
+      <svg class="ico" style="width:13px;height:13px"><use href="#i-shield"/></svg>Owner
+    </button>
+  </div>
+  <div class="n-right" id="n-right">
+    <button class="n-signin" onclick="openVerify()">
+      <svg class="ico" style="width:14px;height:14px;color:var(--p2)"><use href="#i-login"/></svg>Sign in with Roblox
+    </button>
+  </div>
+</nav>
+
+<div id="app">
+
+<!-- TRADE BOARD -->
+<div class="view on" id="view-trades">
+  <div id="vg-sidebar" class="sidebar">
+    <div class="sb-head">Game</div>
+    <button class="sb-btn on" id="sbg-all"    onclick="setGame('all',this)">All Games</button>
+    <button class="sb-btn"    id="sbg-mm2"    onclick="setGame('mm2',this)"><span class="sb-dot" style="background:#ef4444"></span>MM2</button>
+    <button class="sb-btn"    id="sbg-adoptme" onclick="setGame('adoptme',this)"><span class="sb-dot" style="background:#f59e0b"></span>Adopt Me</button>
+    <button class="sb-btn"    id="sbg-sharp"  onclick="setGame('sharp',this)"><span class="sb-dot" style="background:#3b82f6"></span>Sharpshooter</button>
+    <button class="sb-btn"    id="sbg-brainrot" onclick="setGame('brainrot',this)"><span class="sb-dot" style="background:#a855f7"></span>Steal a Brainrot</button>
+    <button class="sb-btn"    id="sbg-growaGarden" onclick="setGame('growaGarden',this)"><span class="sb-dot" style="background:#22c55e"></span>Grow a Garden</button>
+    <div class="sb-div"></div>
+    <div class="sb-head">Type</div>
+    <button class="sb-btn on" id="sbt-all"    onclick="setType('all',this)">All Types</button>
+    <button class="sb-btn"    id="sbt-trade"  onclick="setType('trade',this)">Trading</button>
+    <button class="sb-btn"    id="sbt-buy"    onclick="setType('buy',this)">Buying</button>
+    <button class="sb-btn"    id="sbt-sell"   onclick="setType('sell',this)">Selling</button>
+  </div>
+  <div class="main" style="max-width:100%">
+    <div class="top-bar">
+      <div>
+        <div class="top-title">Trade Board</div>
+        <div class="top-sub" id="game-label">All Games</div>
+      </div>
+      <button class="btn-p" style="width:auto;padding:9px 18px;font-size:13px" onclick="openPost()">
+        <svg class="ico" style="width:14px;height:14px"><use href="#i-plus"/></svg>Post Trade
+      </button>
+    </div>
+    <div class="toolbar">
+      <div class="s-wrap">
+        <svg class="ico s-ico"><use href="#i-search"/></svg>
+        <input class="s-inp" id="q" placeholder="Search items, users..." oninput="render()">
+      </div>
+      <select class="fsel" id="sort" onchange="render()">
+        <option value="new">Newest</option>
+        <option value="old">Oldest</option>
+      </select>
+    </div>
+    <div class="board-meta" id="board-meta"></div>
+    <div class="grid" id="board"></div>
+  </div>
+</div>
+
+<!-- VALUE GUIDE -->
+<div class="view" id="view-values">
+  <div class="sidebar" id="vg-sidebar2">
+    <div class="sb-head">Game</div>
+    <button class="sb-btn on" id="vsbg-all"    onclick="setVG('all',this)">All Games</button>
+    <button class="sb-btn"    id="vsbg-mm2"    onclick="setVG('mm2',this)"><span class="sb-dot" style="background:#ef4444"></span>MM2</button>
+    <button class="sb-btn"    id="vsbg-adoptme" onclick="setVG('adoptme',this)"><span class="sb-dot" style="background:#f59e0b"></span>Adopt Me</button>
+    <button class="sb-btn"    id="vsbg-sharp"  onclick="setVG('sharp',this)"><span class="sb-dot" style="background:#3b82f6"></span>Sharpshooter</button>
+    <button class="sb-btn"    id="vsbg-brainrot" onclick="setVG('brainrot',this)"><span class="sb-dot" style="background:#a855f7"></span>Steal a Brainrot</button>
+    <button class="sb-btn"    id="vsbg-growaGarden" onclick="setVG('growaGarden',this)"><span class="sb-dot" style="background:#22c55e"></span>Grow a Garden</button>
+  </div>
+  <div class="main" style="max-width:100%">
+    <div class="top-bar">
+      <div><div class="top-title">Value Guide</div><div class="top-sub" id="vg-label">All Games</div></div>
+    </div>
+    <div class="toolbar">
+      <div class="s-wrap">
+        <svg class="ico s-ico"><use href="#i-search"/></svg>
+        <input class="s-inp" id="vq" placeholder="Search items..." oninput="renderVG()">
+      </div>
+      <select class="fsel" id="vsort" onchange="renderVG()">
+        <option value="val">Value (High-Low)</option>
+        <option value="name">Name (A-Z)</option>
+        <option value="tier">Tier</option>
+      </select>
+    </div>
+    <div class="vc-grid" id="vgrid"></div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="view" id="view-profile">
+  <div class="p-banner"></div>
+  <div class="p-body">
+    <div class="p-avi"><img id="p-img" src="" alt=""></div>
+    <div class="p-name" id="p-name">Not signed in</div>
+    <div class="p-sub" id="p-sub"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ln);border:1px solid var(--ln);border-radius:var(--r2);overflow:hidden;margin-top:16px;max-width:400px">
+      <div class="p-stat"><div class="p-stat-n" id="p-ntrades">0</div><div class="p-stat-l">Trades</div></div>
+      <div class="p-stat"><div class="p-stat-n" id="p-noffers">0</div><div class="p-stat-l">Items Offered</div></div>
+      <div class="p-stat"><div class="p-stat-n" id="p-member">-</div><div class="p-stat-l">Member</div></div>
+    </div>
+    <div style="margin-top:20px">
+      <div class="top-title" style="font-size:16px;margin-bottom:10px">My Listings</div>
+      <div class="p-grid" id="p-grid"></div>
+    </div>
+    <button class="btn-s" style="max-width:200px;margin-top:20px" onclick="doLogout()">
+      <svg class="ico" style="width:13px;height:13px"><use href="#i-logout"/></svg>Sign Out
+    </button>
+  </div>
+</div>
+
+<!-- CALCULATOR -->
+<div class="view" id="view-calc">
+  <div class="main" style="max-width:960px;margin:0 auto">
+    <div class="top-bar">
+      <div><div class="top-title">Value Calculator</div><div class="top-sub">Compare trade value side-by-side</div></div>
+    </div>
+    <div style="margin-bottom:16px">
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;font-family:var(--mono);margin-bottom:8px">Select Game</div>
+      <div class="gg" id="calc-game-opts">
+        <div class="gopt on" onclick="setCalcGame('mm2',this)"><span class="gdot" style="background:#ef4444"></span>MM2</div>
+        <div class="gopt" onclick="setCalcGame('adoptme',this)"><span class="gdot" style="background:#f59e0b"></span>Adopt Me</div>
+        <div class="gopt" onclick="setCalcGame('sharp',this)"><span class="gdot" style="background:#3b82f6"></span>Sharpshooter</div>
+        <div class="gopt" onclick="setCalcGame('brainrot',this)"><span class="gdot" style="background:#a855f7"></span>Steal a Brainrot</div>
+        <div class="gopt" onclick="setCalcGame('growaGarden',this)"><span class="gdot" style="background:#22c55e"></span>Grow a Garden</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:start">
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="font-size:12px;font-weight:700;color:var(--t2)">Your Offer</div>
+          <div class="calc-total" style="background:var(--p-bg);border:1px solid var(--p-ln);color:var(--p2)" id="calc-total-left">0</div>
+        </div>
+        <div class="calc-search-wrap">
+          <svg class="ico s-ico" style="left:10px"><use href="#i-search"/></svg>
+          <input class="fi" id="calc-q-left" placeholder="Search item..." style="padding-left:32px;font-size:12px" autocomplete="off">
+          <div class="calc-drop" id="calc-drop-left"></div>
+        </div>
+        <div class="calc-items" id="calc-items-left"><div class="calc-empty">Search and add items</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:36px">
+        <div style="font-size:18px;font-weight:900;color:var(--t3);font-family:var(--mono)">VS</div>
+        <div id="calc-verdict" style="font-size:10px;font-family:var(--mono);text-align:center"></div>
+        <button class="btn-s" style="width:auto;padding:5px 12px;font-size:11px;margin:0" onclick="clearCalc()">Clear</button>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="font-size:12px;font-weight:700;color:var(--t2)">You Receive</div>
+          <div class="calc-total" style="background:var(--green-bg);border:1px solid var(--green-ln);color:var(--green)" id="calc-total-right">0</div>
+        </div>
+        <div class="calc-search-wrap">
+          <svg class="ico s-ico" style="left:10px"><use href="#i-search"/></svg>
+          <input class="fi" id="calc-q-right" placeholder="Search item..." style="padding-left:32px;font-size:12px" autocomplete="off">
+          <div class="calc-drop" id="calc-drop-right"></div>
+        </div>
+        <div class="calc-items" id="calc-items-right"><div class="calc-empty">Search and add items</div></div>
+      </div>
+    </div>
+    <div id="calc-summary" style="display:none;margin-top:16px;background:var(--card);border:1px solid var(--ln);border-radius:var(--r2);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div><div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-bottom:3px">DIFFERENCE</div><div id="calc-diff" style="font-size:20px;font-weight:800;font-family:var(--mono)">-</div></div>
+      <div id="calc-verdict-big" style="font-size:13px;font-weight:700;padding:8px 18px;border-radius:var(--r);border:1px solid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- OWNER PORTAL -->
+<div class="view" id="view-owner">
+  <div class="main" style="max-width:960px;margin:0 auto">
+    <div class="top-bar">
+      <div><div class="top-title" style="color:var(--red)">Owner Portal</div><div class="top-sub">karsonsp0717 only</div></div>
+      <button class="btn-p" style="width:auto;padding:8px 16px;font-size:12px" onclick="openModal('mo-vals')">
+        <svg class="ico" style="width:13px;height:13px"><use href="#i-edit"/></svg> Edit Values
+      </button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px">
+      <div class="owner-stat"><div class="owner-stat-n" id="os-trades">-</div><div class="owner-stat-l">Total Trades</div></div>
+      <div class="owner-stat"><div class="owner-stat-n" id="os-users">-</div><div class="owner-stat-l">Unique Users</div></div>
+      <div class="owner-stat"><div class="owner-stat-n" id="os-banned">-</div><div class="owner-stat-l">Banned</div></div>
+      <div class="owner-stat"><div class="owner-stat-n" id="os-today">-</div><div class="owner-stat-l">Posts Today</div></div>
+    </div>
+    <div class="toolbar" style="margin-bottom:12px">
+      <div class="s-wrap"><svg class="ico s-ico"><use href="#i-search"/></svg><input class="s-inp" id="owner-q" placeholder="Search users..." oninput="renderOwner()"></div>
+      <select class="fsel" id="owner-filter" onchange="renderOwner()">
+        <option value="all">All Users</option>
+        <option value="banned">Banned Only</option>
+        <option value="active">Active Only</option>
+      </select>
+    </div>
+    <div id="owner-board"></div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<!-- VERIFY MODAL -->
+<div class="overlay" id="mo-v">
+  <div class="modal">
+    <div class="mhd">
+      <div><div class="mh-t">Sign in with Roblox</div><div class="mh-s">verify via bio phrase</div></div>
+      <button class="mc" onclick="closeModal('mo-v')"><svg class="ico" style="width:12px;height:12px"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="mb">
+      <div class="vstep on" id="vs1">
+        <div class="step-pip">1</div>
+        <div class="fg">
+          <label class="fl">Roblox Username</label>
+          <input class="fi" id="vu" placeholder="e.g. Builderman" autocomplete="off">
+          <div class="ferr" id="ve1" style="display:none"></div>
+        </div>
+        <button class="btn-p" onclick="v1()">Continue <svg class="ico" style="width:12px;height:12px"><use href="#i-ar"/></svg></button>
+      </div>
+      <div class="vstep" id="vs2">
+        <div class="step-pip">2</div>
+        <label class="fl" style="margin-bottom:7px">Paste this phrase into your Roblox bio</label>
+        <div class="phrase-box">
+          <div style="flex:1"><span class="phrase-txt" id="v-phrase">-</span><div class="phrase-word-count" id="v-wc">7 words</div></div>
+          <button class="cp-btn" id="v-cpbtn" onclick="v_copy()"><svg class="ico" style="width:12px;height:12px"><use href="#i-copy"/></svg> Copy</button>
+        </div>
+        <div class="how-to">
+          1. Go to <strong>roblox.com</strong> and open your profile settings<br>
+          2. Paste the phrase into your <strong>About / Bio</strong><br>
+          3. Save on Roblox, then click Verify below<br>
+          <span style="color:var(--t4)">You can remove it from bio after verifying.</span>
+        </div>
+        <button class="btn-p" id="v-verifybtn" onclick="v2()"><svg class="ico" style="width:14px;height:14px"><use href="#i-shield"/></svg>Verify Bio</button>
+        <button class="btn-s" onclick="v_newcode()"><svg class="ico" style="width:12px;height:12px"><use href="#i-plus"/></svg>Get New Code</button>
+        <button class="btn-s" onclick="vstep(1)"><svg class="ico" style="width:12px;height:12px"><use href="#i-al"/></svg>Back</button>
+        <div class="ferr" id="ve2" style="display:none;margin-top:8px"></div>
+      </div>
+      <div class="vstep" id="vs3">
+        <div class="ok-center">
+          <div class="ok-ico"><svg class="ico" style="width:44px;height:44px"><use href="#i-checkc"/></svg></div>
+          <div class="ok-title">Verified!</div>
+          <div class="ok-sub" id="v-okmsg">Welcome to BloxUse.</div>
+          <button class="btn-p" style="max-width:220px;margin:0 auto" onclick="closeModal('mo-v')">Enter BloxUse <svg class="ico" style="width:12px;height:12px"><use href="#i-ar"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- POST TRADE MODAL -->
+<div class="overlay" id="mo-p">
+  <div class="modal">
+    <div class="mhd">
+      <div><div class="mh-t">Post a Trade</div><div class="mh-s">visible to all users</div></div>
+      <button class="mc" onclick="closeModal('mo-p')"><svg class="ico" style="width:12px;height:12px"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="mb">
+      <div class="fg"><label class="fl">Game</label>
+        <div class="gg" id="pg-opts">
+          <div class="gopt on" onclick="selGame('mm2',this)"><span class="gdot" style="background:#ef4444"></span>MM2</div>
+          <div class="gopt" onclick="selGame('adoptme',this)"><span class="gdot" style="background:#f59e0b"></span>Adopt Me</div>
+          <div class="gopt" onclick="selGame('sharp',this)"><span class="gdot" style="background:#3b82f6"></span>Sharpshooter</div>
+          <div class="gopt" onclick="selGame('brainrot',this)"><span class="gdot" style="background:#a855f7"></span>Steal a Brainrot</div>
+          <div class="gopt" onclick="selGame('growaGarden',this)"><span class="gdot" style="background:#22c55e"></span>Grow a Garden</div>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Type</label>
+        <div class="ttype">
+          <div class="tt on" onclick="selType('trade',this)">Trading</div>
+          <div class="tt" onclick="selType('buy',this)">Buying</div>
+          <div class="tt" onclick="selType('sell',this)">Selling</div>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl">Offering</label>
+        <div class="chip-wrap" id="off-chips"></div>
+        <div class="item-inp-row">
+          <input class="fi" id="off-inp" placeholder="Add item..." autocomplete="off">
+          <button class="btn-add" onclick="addItem('off')">Add</button>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl">Looking For</label>
+        <div class="chip-wrap" id="lf-chips"></div>
+        <div class="item-inp-row">
+          <input class="fi" id="lf-inp" placeholder="Add item..." autocomplete="off">
+          <button class="btn-add" onclick="addItem('lf')">Add</button>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl">Note (optional)</label>
+        <input class="fi" id="p-note" placeholder="Any extra info..." maxlength="120">
+      </div>
+      <div class="ferr" id="pe" style="display:none;margin-bottom:10px"></div>
+      <button class="btn-p" id="post-btn" onclick="doPost()"><svg class="ico" style="width:14px;height:14px"><use href="#i-send"/></svg>Post Trade</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="overlay" id="mo-d">
+  <div class="modal">
+    <div class="mhd">
+      <div><div class="mh-t">Trade Details</div></div>
+      <button class="mc" onclick="closeModal('mo-d')"><svg class="ico" style="width:12px;height:12px"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="mb" id="detail-body"></div>
+  </div>
+</div>
+
+<!-- VALUE EDITOR MODAL -->
+<div class="overlay" id="mo-vals">
+  <div class="modal" style="max-width:680px;max-height:88vh;overflow-y:auto">
+    <div class="mhd" style="position:sticky;top:0;background:var(--card);z-index:10;padding-bottom:12px">
+      <div><div class="mh-t">Edit Values</div><div class="mh-s">live edits for all users</div></div>
+      <button class="mc" onclick="closeModal('mo-vals')"><svg class="ico" style="width:12px;height:12px"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="mb">
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <select class="fsel" id="ve-game" onchange="renderValEditor()">
+          <option value="mm2">MM2</option>
+          <option value="adoptme">Adopt Me</option>
+          <option value="sharp">Sharpshooter</option>
+          <option value="brainrot">Steal a Brainrot</option>
+          <option value="growaGarden">Grow a Garden</option>
+        </select>
+        <div class="s-wrap" style="flex:1"><svg class="ico s-ico"><use href="#i-search"/></svg><input class="s-inp" id="ve-q" placeholder="Filter items..." oninput="renderValEditor()"></div>
+        <button class="btn-p" style="width:auto;padding:8px 14px;font-size:12px" onclick="addNewItem()">+ Add Item</button>
+      </div>
+      <div id="ve-list"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+var SUPABASE_URL      = 'https://elyrtnxrxqptupelkuvd.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVseXJ0bnhyeHFwdHVwZWxrdXZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNDcwMzEsImV4cCI6MjA4NzkyMzAzMX0.cT7q9lbjNF8jOyYwDot8WbmKsdo354gUcAvSTQoskzQ';
+var VERIFY_FN = 'https://elyrtnxrxqptupelkuvd.supabase.co/functions/v1/verify-roblox';
+
+var SB_HDR = { 'Content-Type':'application/json', 'apikey':SUPABASE_ANON_KEY, 'Authorization':'Bearer '+SUPABASE_ANON_KEY, 'Prefer':'return=representation' };
+
+async function sbFetch(path, opts) {
+  var r = await fetch(SUPABASE_URL+'/rest/v1/'+path, Object.assign({ headers: SB_HDR }, opts));
+  if(!r.ok){ var e = await r.text(); throw new Error(e); }
+  return r.status === 204 ? null : r.json();
+}
+
+var GAMES = {
+  mm2:        { name:'MM2',               color:'#ef4444', short:'MM2'   },
+  adoptme:    { name:'Adopt Me',          color:'#f59e0b', short:'AM'    },
+  sharp:      { name:'Sharpshooter',      color:'#3b82f6', short:'SS'    },
+  brainrot:   { name:'Steal a Brainrot',  color:'#a855f7', short:'SAB'   },
+  growaGarden:{ name:'Grow a Garden',     color:'#22c55e', short:'GaG'   }
+};
+
+var VALS = [
+  /* MM2 */
+  {n:"C. Traveler's Gun",g:'mm2',tier:'Chroma',v:215000,d:5000},{n:'Chroma Evergun',g:'mm2',tier:'Chroma',v:92000,d:1000},{n:'Chroma Evergreen',g:'mm2',tier:'Chroma',v:61000,d:1000},{n:'Chroma Bauble',g:'mm2',tier:'Chroma',v:49000,d:-1000},{n:"C. Vampire's Gun",g:'mm2',tier:'Chroma',v:43000,d:-1000},{n:'C. Constellation',g:'mm2',tier:'Chroma',v:40000,d:-1000},
+  {n:'Chroma Alienbeam',g:'mm2',tier:'Chroma',v:31000,d:1000},{n:'Chroma Raygun',g:'mm2',tier:'Chroma',v:16000,d:500},{n:'Chroma Blizzard',g:'mm2',tier:'Chroma',v:14500,d:-500},{n:'Chroma Treat',g:'mm2',tier:'Chroma',v:11000,d:0},{n:'Chroma Sunrise',g:'mm2',tier:'Chroma',v:11000,d:250},{n:'Chroma Sweet',g:'mm2',tier:'Chroma',v:9500,d:0},{n:'C. Snowcannon',g:'mm2',tier:'Chroma',v:9000,d:-500},{n:'Chroma Snowstorm',g:'mm2',tier:'Chroma',v:9000,d:-250},{n:'C. Heart Wand',g:'mm2',tier:'Chroma',v:6500,d:-500},{n:'Chroma Sunset',g:'mm2',tier:'Chroma',v:6500,d:100},{n:'C. Snow Dagger',g:'mm2',tier:'Chroma',v:6000,d:-250},{n:'Chroma Ornament',g:'mm2',tier:'Chroma',v:4200,d:-300},{n:'Chroma Watergun',g:'mm2',tier:'Chroma',v:3400,d:-50},
+  {n:'C. Darkbringer',g:'mm2',tier:'Chroma',v:95,d:0},{n:'C. Lightbringer',g:'mm2',tier:'Chroma',v:90,d:0},{n:'C. Candleflame',g:'mm2',tier:'Chroma',v:70,d:0},{n:'C. Cookiecane',g:'mm2',tier:'Chroma',v:60,d:0},{n:'C. Elderwood Blade',g:'mm2',tier:'Chroma',v:60,d:-2},{n:'C. Swirly Gun',g:'mm2',tier:'Chroma',v:60,d:-2},{n:'Chroma Luger',g:'mm2',tier:'Chroma',v:60,d:-2},{n:'Chroma Laser',g:'mm2',tier:'Chroma',v:55,d:-3},{n:'C. Deathshard',g:'mm2',tier:'Chroma',v:50,d:-5},{n:'Chroma Shark',g:'mm2',tier:'Chroma',v:50,d:-5},{n:'Chroma Slasher',g:'mm2',tier:'Chroma',v:50,d:-5},{n:'Chroma Fang',g:'mm2',tier:'Chroma',v:45,d:-5},{n:'Chroma Gemstone',g:'mm2',tier:'Chroma',v:45,d:-5},{n:'Chroma Heat',g:'mm2',tier:'Chroma',v:45,d:-5},
+  {n:"Traveler's Gun",g:'mm2',tier:'Godly',v:4200,d:-100},{n:'Evergun',g:'mm2',tier:'Godly',v:3550,d:-50},{n:'Constellation',g:'mm2',tier:'Godly',v:3000,d:-50},{n:'Evergreen',g:'mm2',tier:'Godly',v:2700,d:-50},{n:'Turkey',g:'mm2',tier:'Godly',v:1825,d:25},{n:"Vampire's Gun",g:'mm2',tier:'Godly',v:1800,d:-25},{n:'Darkshot',g:'mm2',tier:'Godly',v:1060,d:10},{n:'Darksword',g:'mm2',tier:'Godly',v:1040,d:10},{n:'Alienbeam',g:'mm2',tier:'Godly',v:1025,d:25},{n:'Blossom (Godly)',g:'mm2',tier:'Godly',v:985,d:5},{n:'Sakura',g:'mm2',tier:'Godly',v:975,d:5},{n:'Bauble',g:'mm2',tier:'Godly',v:925,d:25},{n:'Raygun',g:'mm2',tier:'Godly',v:600,d:25},{n:'Sunrise',g:'mm2',tier:'Godly',v:525,d:-25},{n:'Heart Wand',g:'mm2',tier:'Godly',v:325,d:-50},{n:'Snowcannon',g:'mm2',tier:'Godly',v:325,d:-25},{n:'Rainbow Gun',g:'mm2',tier:'Godly',v:315,d:5},{n:'Rainbow',g:'mm2',tier:'Godly',v:305,d:5},{n:'Soul',g:'mm2',tier:'Godly',v:305,d:5},{n:'Spirit',g:'mm2',tier:'Godly',v:295,d:5},{n:'Sunset',g:'mm2',tier:'Godly',v:275,d:-25},{n:'Flora',g:'mm2',tier:'Godly',v:265,d:-5},{n:'Bloom',g:'mm2',tier:'Godly',v:255,d:-5},{n:'Sweet',g:'mm2',tier:'Godly',v:225,d:-25},{n:'Treat',g:'mm2',tier:'Godly',v:225,d:-25},{n:'Snow Dagger',g:'mm2',tier:'Godly',v:220,d:-5},{n:'Bat',g:'mm2',tier:'Godly',v:205,d:-5},{n:'Flowerwood Gun',g:'mm2',tier:'Godly',v:170,d:5},{n:'Flowerwood',g:'mm2',tier:'Godly',v:165,d:5},{n:'Blizzard',g:'mm2',tier:'Godly',v:155,d:-5},{n:'Snowstorm',g:'mm2',tier:'Godly',v:155,d:-5},{n:'Xenoknife',g:'mm2',tier:'Godly',v:150,d:-5},{n:'Xenoshot',g:'mm2',tier:'Godly',v:150,d:-5},{n:'Ocean',g:'mm2',tier:'Godly',v:145,d:-5},{n:'Waves',g:'mm2',tier:'Godly',v:140,d:-5},{n:'Candy',g:'mm2',tier:'Godly',v:130,d:-5},{n:'Watergun',g:'mm2',tier:'Godly',v:115,d:-5},{n:'Heartblade',g:'mm2',tier:'Godly',v:115,d:-5},{n:'Borealis',g:'mm2',tier:'Godly',v:105,d:-5},{n:'Australis',g:'mm2',tier:'Godly',v:100,d:-5},
+  {n:'Pearl',g:'mm2',tier:'Godly',v:60,d:-2},{n:'Pearlshine',g:'mm2',tier:'Godly',v:60,d:-2},{n:'Iceblaster',g:'mm2',tier:'Godly',v:60,d:-5},{n:'Luger',g:'mm2',tier:'Godly',v:60,d:-5},{n:'Sugar',g:'mm2',tier:'Godly',v:60,d:-5},{n:'Darkbringer',g:'mm2',tier:'Godly',v:50,d:-5},{n:'Lightbringer',g:'mm2',tier:'Godly',v:48,d:-5},{n:'Elderwood Revolver',g:'mm2',tier:'Godly',v:45,d:-2},{n:'Elderwood Blade',g:'mm2',tier:'Godly',v:42,d:-2},{n:'Deathshard',g:'mm2',tier:'Godly',v:40,d:-2},{n:'Gemstone',g:'mm2',tier:'Godly',v:38,d:-2},{n:'Slasher',g:'mm2',tier:'Godly',v:36,d:-2},{n:'Fang',g:'mm2',tier:'Godly',v:34,d:-2},{n:'Heat',g:'mm2',tier:'Godly',v:32,d:-2},{n:'Minty',g:'mm2',tier:'Godly',v:30,d:-2},{n:"Vamp's Edge",g:'mm2',tier:'Godly',v:28,d:-2},{n:'Cookiecane',g:'mm2',tier:'Godly',v:25,d:0},{n:'Candleflame',g:'mm2',tier:'Godly',v:25,d:0},{n:'Laser',g:'mm2',tier:'Godly',v:22,d:-2},{n:'Shark',g:'mm2',tier:'Godly',v:20,d:-2},
+  {n:'Gingerscope',g:'mm2',tier:'Ancient',v:17000,d:250},{n:"Traveler's Axe",g:'mm2',tier:'Ancient',v:7800,d:-100},{n:'Celestial',g:'mm2',tier:'Ancient',v:1800,d:-25},{n:"Vampire's Axe",g:'mm2',tier:'Ancient',v:950,d:25},{n:'Harvester',g:'mm2',tier:'Ancient',v:400,d:-15},{n:'Icepiercer',g:'mm2',tier:'Ancient',v:300,d:-15},{n:'Icebreaker',g:'mm2',tier:'Ancient',v:115,d:-5},{n:'Batwing',g:'mm2',tier:'Ancient',v:57,d:-3},{n:'Swirly Axe',g:'mm2',tier:'Ancient',v:55,d:-5},{n:'Elderwood Scythe',g:'mm2',tier:'Ancient',v:55,d:-5},{n:'Hallowscythe',g:'mm2',tier:'Ancient',v:45,d:-3},{n:'Logchopper',g:'mm2',tier:'Ancient',v:20,d:-2},{n:'Icewing',g:'mm2',tier:'Ancient',v:13,d:1},
+  {n:'Corrupt',g:'mm2',tier:'Unique',v:800,d:-25},
+  {n:'Zombie Dog',g:'mm2',tier:'Pet',v:450,d:25},{n:'Elf Pet (2019)',g:'mm2',tier:'Pet',v:200,d:0},{n:'Blue Pumpkin (2018)',g:'mm2',tier:'Pet',v:140,d:10},{n:'Red Pumpkin (2018)',g:'mm2',tier:'Pet',v:100,d:10},{n:'Dogey',g:'mm2',tier:'Pet',v:90,d:5},{n:'Green Pumpkin (2018)',g:'mm2',tier:'Pet',v:60,d:5},{n:'Black Cat',g:'mm2',tier:'Pet',v:60,d:0},
+  /* Adopt Me */
+  {n:'Shadow Dragon',g:'adoptme',tier:'Legendary',v:245000,d:0},{n:'Bat Dragon',g:'adoptme',tier:'Legendary',v:225000,d:0},{n:'Giraffe',g:'adoptme',tier:'Legendary',v:142500,d:0},{n:'Frost Dragon',g:'adoptme',tier:'Legendary',v:100000,d:0},{n:'Owl',g:'adoptme',tier:'Legendary',v:75000,d:0},{n:'Parrot',g:'adoptme',tier:'Legendary',v:62500,d:0},{n:'Crow',g:'adoptme',tier:'Legendary',v:50000,d:0},{n:'Evil Unicorn',g:'adoptme',tier:'Legendary',v:50000,d:0},{n:'Blazing Lion',g:'adoptme',tier:'Legendary',v:37500,d:0},{n:'Arctic Reindeer',g:'adoptme',tier:'Legendary',v:20000,d:0},{n:'Albino Monkey',g:'adoptme',tier:'Legendary',v:12000,d:0},{n:'Monkey King',g:'adoptme',tier:'Legendary',v:19000,d:0},{n:'Turtle',g:'adoptme',tier:'Legendary',v:11000,d:0},{n:'Golden Unicorn',g:'adoptme',tier:'Legendary',v:8500,d:0},{n:'Kangaroo',g:'adoptme',tier:'Legendary',v:8000,d:0},{n:'Gold Walrus',g:'adoptme',tier:'Legendary',v:7000,d:0},{n:'Hot Doggo',g:'adoptme',tier:'Legendary',v:6000,d:0},{n:'Balloon Unicorn',g:'adoptme',tier:'Legendary',v:6000,d:0},{n:'Frost Fury',g:'adoptme',tier:'Legendary',v:4000,d:0},{n:'Dancing Dragon',g:'adoptme',tier:'Legendary',v:3500,d:0},{n:'Diamond Unicorn',g:'adoptme',tier:'Legendary',v:2000,d:0},{n:'Ice Golem',g:'adoptme',tier:'Legendary',v:2000,d:0},{n:'Diamond Lady Bug',g:'adoptme',tier:'Legendary',v:2000,d:0},{n:'Skele-Rex',g:'adoptme',tier:'Legendary',v:2000,d:0},{n:'Lavender Dragon',g:'adoptme',tier:'Legendary',v:2000,d:0},{n:'Ninja Monkey',g:'adoptme',tier:'Legendary',v:1750,d:0},{n:'Phoenix',g:'adoptme',tier:'Legendary',v:1500,d:0},{n:'Queen Bee',g:'adoptme',tier:'Legendary',v:1500,d:0},{n:'T-Rex',g:'adoptme',tier:'Legendary',v:1500,d:0},{n:'Shark',g:'adoptme',tier:'Legendary',v:1500,d:0},{n:'Diamond Dragon',g:'adoptme',tier:'Legendary',v:1500,d:0},{n:'Chameleon',g:'adoptme',tier:'Legendary',v:1500,d:0},{n:'Golden Rat',g:'adoptme',tier:'Legendary',v:1200,d:0},{n:'King Bee',g:'adoptme',tier:'Legendary',v:1200,d:0},{n:'Golden Dragon',g:'adoptme',tier:'Legendary',v:1000,d:0},{n:'Goldhorn',g:'adoptme',tier:'Legendary',v:1000,d:0},{n:'Diamond Griffin',g:'adoptme',tier:'Legendary',v:1000,d:0},{n:'Axolotl',g:'adoptme',tier:'Legendary',v:1000,d:0},{n:'Golden Penguin',g:'adoptme',tier:'Legendary',v:1000,d:0},{n:'Golden King Penguin',g:'adoptme',tier:'Legendary',v:1000,d:0},{n:'Unicorn',g:'adoptme',tier:'Legendary',v:1000,d:0},{n:'Snow Owl',g:'adoptme',tier:'Legendary',v:900,d:0},{n:'Cobra',g:'adoptme',tier:'Legendary',v:850,d:0},{n:'Kitsune',g:'adoptme',tier:'Legendary',v:850,d:0},{n:'Cerberus (AM)',g:'adoptme',tier:'Legendary',v:850,d:0},{n:'Robo Dog',g:'adoptme',tier:'Legendary',v:800,d:0},{n:'Golden Griffin',g:'adoptme',tier:'Legendary',v:800,d:0},{n:'Guardian Lion',g:'adoptme',tier:'Legendary',v:800,d:0},{n:'Dragon',g:'adoptme',tier:'Legendary',v:750,d:0},{n:'Dragonfly',g:'adoptme',tier:'Legendary',v:750,d:0},{n:'Griffin',g:'adoptme',tier:'Legendary',v:700,d:0},
+  {n:'Blue Dog',g:'adoptme',tier:'Ultra-Rare',v:132500,d:0},{n:'Pink Cat',g:'adoptme',tier:'Ultra-Rare',v:52500,d:0},{n:'Hedgehog',g:'adoptme',tier:'Ultra-Rare',v:25000,d:0},{n:'Dalmatian',g:'adoptme',tier:'Ultra-Rare',v:13000,d:0},{n:'Flamingo',g:'adoptme',tier:'Ultra-Rare',v:10000,d:0},{n:'Lion',g:'adoptme',tier:'Ultra-Rare',v:9000,d:0},{n:'Crocodile',g:'adoptme',tier:'Ultra-Rare',v:7500,d:0},{n:'Puffin',g:'adoptme',tier:'Ultra-Rare',v:2000,d:0},{n:'Purple Butterfly',g:'adoptme',tier:'Ultra-Rare',v:1500,d:0},{n:'Llama',g:'adoptme',tier:'Ultra-Rare',v:1500,d:0},{n:'Turkey (AM)',g:'adoptme',tier:'Ultra-Rare',v:1500,d:0},{n:'Arctic Fox',g:'adoptme',tier:'Ultra-Rare',v:1000,d:0},{n:'Lamb',g:'adoptme',tier:'Ultra-Rare',v:1000,d:0},{n:'Toy Monkey',g:'adoptme',tier:'Ultra-Rare',v:850,d:0},{n:'Business Monkey',g:'adoptme',tier:'Ultra-Rare',v:850,d:0},{n:'Husky',g:'adoptme',tier:'Ultra-Rare',v:700,d:0},{n:'Red Squirrel',g:'adoptme',tier:'Ultra-Rare',v:600,d:0},{n:'St. Bernard',g:'adoptme',tier:'Ultra-Rare',v:450,d:0},{n:'Frog',g:'adoptme',tier:'Ultra-Rare',v:400,d:0},{n:'Koala',g:'adoptme',tier:'Ultra-Rare',v:350,d:0},{n:'Albino Bat',g:'adoptme',tier:'Ultra-Rare',v:250,d:0},{n:'Zombie Buffalo',g:'adoptme',tier:'Ultra-Rare',v:2250,d:0},{n:'Platypus',g:'adoptme',tier:'Ultra-Rare',v:2250,d:0},
+  {n:'Elephant',g:'adoptme',tier:'Rare',v:90000,d:0},{n:'Cow',g:'adoptme',tier:'Rare',v:82500,d:0},{n:'Hyena',g:'adoptme',tier:'Rare',v:60000,d:0},{n:'Pig',g:'adoptme',tier:'Rare',v:42500,d:0},{n:'Brown Bear',g:'adoptme',tier:'Rare',v:40000,d:0},{n:'Rhino',g:'adoptme',tier:'Rare',v:38500,d:0},{n:'Polar Bear',g:'adoptme',tier:'Rare',v:35000,d:0},{n:'Swan',g:'adoptme',tier:'Rare',v:30000,d:0},{n:'Reindeer',g:'adoptme',tier:'Rare',v:20000,d:0},{n:'Woolly Mammoth',g:'adoptme',tier:'Rare',v:8000,d:0},{n:'Seahorse',g:'adoptme',tier:'Rare',v:5000,d:0},{n:'Monkey',g:'adoptme',tier:'Rare',v:5500,d:0},{n:'Rat',g:'adoptme',tier:'Rare',v:5000,d:0},{n:'Narwhal',g:'adoptme',tier:'Rare',v:4500,d:0},{n:'Bunny',g:'adoptme',tier:'Rare',v:3500,d:0},{n:'Beaver',g:'adoptme',tier:'Rare',v:3500,d:0},{n:'Ox',g:'adoptme',tier:'Rare',v:2500,d:0},{n:'Musk Ox',g:'adoptme',tier:'Rare',v:17500,d:0},{n:'Lynx',g:'adoptme',tier:'Rare',v:17500,d:0},
+  {n:'Meerkat',g:'adoptme',tier:'Uncommon',v:50000,d:0},{n:'Capybara',g:'adoptme',tier:'Uncommon',v:27500,d:0},{n:'Wild Boar',g:'adoptme',tier:'Uncommon',v:27500,d:0},{n:'Black Panther',g:'adoptme',tier:'Uncommon',v:25000,d:0},{n:'Silly Duck',g:'adoptme',tier:'Uncommon',v:25000,d:0},{n:'Drake',g:'adoptme',tier:'Uncommon',v:22500,d:0},{n:'Wolf',g:'adoptme',tier:'Uncommon',v:9000,d:0},{n:'Glyptodon',g:'adoptme',tier:'Uncommon',v:7000,d:0},{n:'Snowman',g:'adoptme',tier:'Uncommon',v:6500,d:0},{n:'Pet Rock',g:'adoptme',tier:'Uncommon',v:5000,d:0},{n:'Stegosaurus',g:'adoptme',tier:'Uncommon',v:5000,d:0},{n:'Dingo',g:'adoptme',tier:'Uncommon',v:4000,d:0},{n:'Bat (AM)',g:'adoptme',tier:'Uncommon',v:3500,d:0},{n:'Chocolate Labrador',g:'adoptme',tier:'Uncommon',v:3000,d:0},{n:'Fennec Fox',g:'adoptme',tier:'Uncommon',v:1750,d:0},
+  {n:'Chicken',g:'adoptme',tier:'Common',v:18000,d:0},{n:'Chick',g:'adoptme',tier:'Common',v:12500,d:0},{n:'Robin',g:'adoptme',tier:'Common',v:5000,d:0},{n:'Ground Sloth',g:'adoptme',tier:'Common',v:4000,d:0},{n:'Bandicoot',g:'adoptme',tier:'Common',v:2250,d:0},{n:'Otter',g:'adoptme',tier:'Common',v:1750,d:0},{n:'Buffalo',g:'adoptme',tier:'Common',v:1750,d:0},{n:'Cat',g:'adoptme',tier:'Common',v:1500,d:0},{n:'Dog',g:'adoptme',tier:'Common',v:1500,d:0},
+  /* Steal a Brainrot */
+  {n:'Strawberry Elephant',g:'brainrot',tier:'OG',v:50000,d:0},{n:'Skibidi Toilet',g:'brainrot',tier:'OG',v:35000,d:0},{n:'Meowl',g:'brainrot',tier:'OG',v:25000,d:0},
+  {n:'Dragon Gingerini',g:'brainrot',tier:'Secret',v:9500,d:0},{n:'Dragon Cannelloni',g:'brainrot',tier:'Secret',v:5500,d:0},{n:'Hydra Dragon Cannelloni',g:'brainrot',tier:'Secret',v:5000,d:0},{n:'Cerberus (SAB)',g:'brainrot',tier:'Secret',v:4500,d:0},{n:'Rosey and Teddy',g:'brainrot',tier:'Secret',v:3800,d:0},{n:'Ketupat Bros',g:'brainrot',tier:'Secret',v:2700,d:0},{n:'Ginger Gerat',g:'brainrot',tier:'Secret',v:2500,d:0},{n:'La Supreme Combinasion',g:'brainrot',tier:'Secret',v:2400,d:0},{n:'Capitano Moby',g:'brainrot',tier:'Secret',v:2000,d:0},{n:'Cooki and Milki',g:'brainrot',tier:'Secret',v:2000,d:0},{n:'Reinito Sleighito',g:'brainrot',tier:'Secret',v:2000,d:0},{n:'Burguro And Fryuro',g:'brainrot',tier:'Secret',v:1600,d:0},{n:'Spooky and Pumpky',g:'brainrot',tier:'Secret',v:1200,d:0},{n:'Fragrama and Chocrama',g:'brainrot',tier:'Secret',v:1100,d:0},{n:'Los Primos',g:'brainrot',tier:'Secret',v:1000,d:0},{n:'Garama and Madundung',g:'brainrot',tier:'Secret',v:980,d:0},{n:'La Casa Boo',g:'brainrot',tier:'Secret',v:950,d:0},{n:'Popcuru and Fizzuru',g:'brainrot',tier:'Secret',v:900,d:0},{n:'Rosetti Tualetti',g:'brainrot',tier:'Secret',v:900,d:0},{n:'Jolly Jolly Sahur',g:'brainrot',tier:'Secret',v:700,d:0},{n:'La Secret Combinasion',g:'brainrot',tier:'Secret',v:550,d:0},{n:'La Ginger Sekolah',g:'brainrot',tier:'Secret',v:500,d:0},{n:'Chillin Chili',g:'brainrot',tier:'Secret',v:450,d:0},{n:'Tang Tang Keletang',g:'brainrot',tier:'Secret',v:400,d:0},{n:'Ketupat Kepat',g:'brainrot',tier:'Secret',v:360,d:0},{n:'La Taco Combinasion',g:'brainrot',tier:'Secret',v:330,d:0},{n:'Tictac Sahur',g:'brainrot',tier:'Secret',v:330,d:0},{n:'Los Bros',g:'brainrot',tier:'Secret',v:320,d:0},{n:'Los Spaghettis',g:'brainrot',tier:'Secret',v:300,d:0},{n:'Chipso and Queso',g:'brainrot',tier:'Secret',v:300,d:0},{n:'Los Jolly Combinasionas',g:'brainrot',tier:'Secret',v:300,d:0},{n:'Nuclearo Dinossauro',g:'brainrot',tier:'Secret',v:300,d:0},{n:'Orcaledon',g:'brainrot',tier:'Secret',v:275,d:0},{n:'Spaghetti Tualetti',g:'brainrot',tier:'Secret',v:275,d:0},{n:'La Jolly Grande',g:'brainrot',tier:'Secret',v:260,d:0},{n:'La Romantic Grande',g:'brainrot',tier:'Secret',v:250,d:0},{n:'List List List Sahur',g:'brainrot',tier:'Secret',v:245,d:0},{n:'Los Candies',g:'brainrot',tier:'Secret',v:245,d:0},{n:'Money Money Puggy',g:'brainrot',tier:'Secret',v:240,d:0},{n:'W or L',g:'brainrot',tier:'Secret',v:220,d:0},{n:'La Extinct Grande',g:'brainrot',tier:'Secret',v:200,d:0},{n:'Gobblino Uniciclino',g:'brainrot',tier:'Secret',v:200,d:0},{n:'Las Sis',g:'brainrot',tier:'Secret',v:200,d:0},{n:'Eviledon',g:'brainrot',tier:'Secret',v:200,d:0},{n:'Los Puggies',g:'brainrot',tier:'Secret',v:150,d:0},{n:'Brunito Marsito',g:'brainrot',tier:'Secret',v:150,d:0},{n:'Money Money Reindeer',g:'brainrot',tier:'Secret',v:140,d:0},{n:'La Spooky Grande',g:'brainrot',tier:'Secret',v:130,d:0},{n:'Los 25',g:'brainrot',tier:'Secret',v:130,d:0},{n:'Tuff Toucan',g:'brainrot',tier:'Secret',v:120,d:0},{n:'Spinny Hammy',g:'brainrot',tier:'Secret',v:120,d:0},{n:'Esok Sekolah',g:'brainrot',tier:'Secret',v:110,d:0},{n:'Noo my Heart',g:'brainrot',tier:'Secret',v:100,d:0},{n:'Swaggy Bros',g:'brainrot',tier:'Secret',v:100,d:0},{n:'Bacuru and Egguru',g:'brainrot',tier:'Secret',v:90,d:0},{n:'Los Spooky Combinasionas',g:'brainrot',tier:'Secret',v:70,d:0},{n:'La Grande Combinasion',g:'brainrot',tier:'Secret',v:70,d:0},{n:'Chicleteira Noelteira',g:'brainrot',tier:'Secret',v:45,d:0},{n:'Los Combinasionas',g:'brainrot',tier:'Secret',v:45,d:0},{n:'Los 67',g:'brainrot',tier:'Secret',v:40,d:0},{n:'La Vacca Saturno Saturnita',g:'brainrot',tier:'Secret',v:1,d:0},
+  /* Grow a Garden */
+  {n:'Octobloom',g:'garden',tier:'Transcendent',v:288888,d:0},{n:'Zebrazinkle',g:'garden',tier:'Transcendent',v:210000,d:2000},{n:'Crimson Thorn',g:'garden',tier:'Transcendent',v:195000,d:1000},
+  {n:'Candy Blossom',g:'garden',tier:'Divine',v:150000,d:500},{n:'Cocomango',g:'garden',tier:'Divine',v:183465,d:0},{n:'Bone Blossom',g:'garden',tier:'Divine',v:130000,d:0},{n:'Maple Resin',g:'garden',tier:'Divine',v:120000,d:800},{n:'Brussels Sprout',g:'garden',tier:'Divine',v:126443,d:0},{n:'Potato',g:'garden',tier:'Divine',v:93422,d:0},
+  {n:'Moon Blossom',g:'garden',tier:'Mythical',v:85000,d:400},{n:'Briar Rose',g:'garden',tier:'Mythical',v:78634,d:0},{n:'Burning Bud',g:'garden',tier:'Mythical',v:79254,d:0},{n:'Giant Pinecone',g:'garden',tier:'Mythical',v:77143,d:0},{n:'Ember Lily',g:'garden',tier:'Mythical',v:71533,d:0},{n:'Mushroom',g:'garden',tier:'Mythical',v:142443,d:0},{n:'Broccoli',g:'garden',tier:'Mythical',v:58934,d:0},{n:'Sugar Apple',g:'garden',tier:'Mythical',v:55658,d:0},
+  {n:'Hive Fruit',g:'garden',tier:'Legendary',v:45000,d:200},{n:'Nectarine',g:'garden',tier:'Legendary',v:31000,d:0},{n:'Lilac',g:'garden',tier:'Legendary',v:30000,d:100},{n:'Beanstalk',g:'garden',tier:'Legendary',v:18788,d:0},{n:'Foxglove',g:'garden',tier:'Legendary',v:16000,d:0},
+  {n:'Cacao',g:'garden',tier:'Rare',v:10456,d:0},{n:'Pepper',g:'garden',tier:'Rare',v:7577,d:0},{n:'Grape',g:'garden',tier:'Rare',v:7554,d:0},{n:'Mango',g:'garden',tier:'Rare',v:6308,d:0},
+  {n:'Dragon Fruit',g:'garden',tier:'Uncommon',v:4566,d:0},{n:'Bamboo',g:'garden',tier:'Uncommon',v:3944,d:0},{n:'Pumpkin',g:'garden',tier:'Uncommon',v:3854,d:0},{n:'Cactus',g:'garden',tier:'Uncommon',v:3224,d:0},{n:'Watermelon',g:'garden',tier:'Uncommon',v:2905,d:0},{n:'Coconut',g:'garden',tier:'Uncommon',v:2670,d:0},{n:'Daffodil',g:'garden',tier:'Uncommon',v:988,d:0},{n:'Orange Tulip',g:'garden',tier:'Uncommon',v:792,d:0},
+  {n:'Rose',g:'garden',tier:'Common',v:4800,d:0},{n:'Apple',g:'garden',tier:'Common',v:266,d:0},{n:'Corn',g:'garden',tier:'Common',v:44,d:0},{n:'Tomato',g:'garden',tier:'Common',v:35,d:0},{n:'Carrot',g:'garden',tier:'Common',v:22,d:0},{n:'Blueberry',g:'garden',tier:'Common',v:21,d:0},{n:'Strawberry',g:'garden',tier:'Common',v:19,d:0},
+  /* Sharp */
+  {n:'Void Dagger',g:'sharp',tier:'Mythic',v:850,d:30},{n:'Phantom Edge',g:'sharp',tier:'Legendary',v:420,d:-10},{n:'Golden Blade',g:'sharp',tier:'Legendary',v:380,d:15},{n:'Obsidian Edge',g:'sharp',tier:'Legendary',v:320,d:5},{n:'Spectral Blade',g:'sharp',tier:'Legendary',v:280,d:0},{n:'Crystal Shard',g:'sharp',tier:'Epic',v:180,d:5},{n:'Shadow Slice',g:'sharp',tier:'Epic',v:140,d:0},{n:'Toxic Knife',g:'sharp',tier:'Epic',v:115,d:3},{n:'Inferno Blade',g:'sharp',tier:'Epic',v:105,d:0},{n:'Neon Knife',g:'sharp',tier:'Rare',v:75,d:8},{n:'Electric Edge',g:'sharp',tier:'Rare',v:60,d:2},{n:'Frozen Blade',g:'sharp',tier:'Rare',v:55,d:0},{n:'Plasma Gun',g:'sharp',tier:'Rare',v:48,d:1},{n:'Iron Blade',g:'sharp',tier:'Uncommon',v:25,d:0},{n:'Steel Knife',g:'sharp',tier:'Uncommon',v:20,d:0},{n:'Basic Gun',g:'sharp',tier:'Common',v:5,d:0},{n:'Starter Knife',g:'sharp',tier:'Common',v:3,d:0}
+];
+
+
+var SESS_KEY = 'tv_user_v2';
+var SESS_EXP = 30*24*60*60*1000;
+function saveUser(u)  { try{ localStorage.setItem(SESS_KEY, JSON.stringify({u:u,ts:Date.now()})); }catch(e){} }
+function loadUser()   { try{ var r=JSON.parse(localStorage.getItem(SESS_KEY)||'null'); if(!r)return null; if(Date.now()-r.ts>SESS_EXP){localStorage.removeItem(SESS_KEY);return null;} return r.u; }catch(e){return null;} }
+function clearUser()  { try{ localStorage.removeItem(SESS_KEY); }catch(e){} }
+
+var WORDS = ['water','cookie','milk','taco','mochi','dumpling','stew','pizza','bread','juice','apple','grape','mango','peach','lemon','berry','melon','plum','lime','pear','honey','sugar','butter','cream','waffle','donut','bagel','nacho','ramen','sushi','chips','salsa','guac','wrap','toast','boba','soup','rice','bean','corn','egg','bacon','syrup','jam','sauce','noodle','pretzel','cupcake','brownie','fudge','latte','cocoa','tea','soda','shake','smoothie','cider','punch','candy','gummy','pasta','burger','hotdog','nugget','fry','salad'];
+function genPhrase() { var p=WORDS.slice(); for(var i=p.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=p[i];p[i]=p[j];p[j]=t;} return p.slice(0,7).join(' '); }
+
+function avi(uid) { return 'https://www.roblox.com/headshot-thumbnail/image?userId='+uid+'&width=420&height=420&format=png'; }
+
+function ago(ts) { var d=Date.now()-ts; if(d<6e4)return 'just now'; if(d<36e5)return Math.floor(d/6e4)+'m ago'; if(d<864e5)return Math.floor(d/36e5)+'h ago'; return Math.floor(d/864e5)+'d ago'; }
+
+function fmtVal(v) { if(v>=1000000)return (v/1000000).toFixed(2)+'M'; if(v>=1000)return (v/1000).toFixed(1)+'K'; return String(Math.round(v)); }
+
+function h(s) { var x=String(s); x=x.replace(/&/g,'&amp;'); x=x.replace(/</g,'&lt;'); x=x.replace(/>/g,'&gt;'); x=x.replace(/"/g,'&quot;'); return x; }
+
+/* STATE */
+var me = null;
+var trades = [];
+var curGame = 'all';
+var curType = 'all';
+var curVG   = 'all';
+var pGame   = 'mm2';
+var pType   = 'trade';
+var offItems = [];
+var lfItems  = [];
+var vUser   = null;
+var vPhrase = null;
+
+/* OWNER */
+var OWNER = 'karsonsp0717';
+var banned = {};
+function isOwner() { return me && me.user && me.user.toLowerCase() === OWNER.toLowerCase(); }
+function loadBanned() { try{ banned=JSON.parse(localStorage.getItem('bx_banned')||'{}'); }catch(e){ banned={}; } }
+function saveBanned() { try{ localStorage.setItem('bx_banned',JSON.stringify(banned)); }catch(e){} }
+function isBanned(uid) { return !!banned[String(uid)]; }
+
+/* GOTO */
+function goto(v) {
+  if(v==='owner' && !isOwner()) return;
+  document.querySelectorAll('.view').forEach(function(el){ el.classList.remove('on'); });
+  document.querySelectorAll('.n-tab').forEach(function(el){ el.classList.remove('on'); });
+  var ve=document.getElementById('view-'+v); if(ve) ve.classList.add('on');
+  var te=document.getElementById('nt-'+v);   if(te) te.classList.add('on');
+  if(v==='trades')  loadTrades().then(render);
+  if(v==='values')  renderVG();
+  if(v==='profile') renderProfile();
+  if(v==='calc')    initCalc();
+  if(v==='owner')   renderOwner();
+}
+
+/* SUPABASE */
+async function loadTrades() {
+  var data = await sbFetch('trades?select=*&order=ts.desc');
+  trades = (data||[]).map(function(r){ return {id:r.id,user:r.user,uid:r.uid,game:r.game,type:r.type,off:r.off||[],lf:r.lf||[],note:r.note||'',ts:r.ts}; });
+}
+
+/* RENDER TRADES */
+function setGame(g,btn) { curGame=g; document.querySelectorAll('[id^="sbg-"]').forEach(function(b){b.classList.remove('on');}); btn.classList.add('on'); document.getElementById('game-label').textContent=g==='all'?'All Games':GAMES[g].name; render(); }
+function setType(g,btn) { curType=g; document.querySelectorAll('[id^="sbt-"]').forEach(function(b){b.classList.remove('on');}); btn.classList.add('on'); render(); }
+function setVG(g,btn)   { curVG=g;   document.querySelectorAll('[id^="vsbg-"]').forEach(function(b){b.classList.remove('on');}); btn.classList.add('on'); document.getElementById('vg-label').textContent=g==='all'?'All Games':GAMES[g].name; renderVG(); }
+
+function render() {
+  var q=(document.getElementById('q')||{value:''}).value.toLowerCase();
+  var sort=(document.getElementById('sort')||{value:'new'}).value;
+  var list=trades.filter(function(t){
+    if(curGame!=='all' && t.game!==curGame) return false;
+    if(curType!=='all' && t.type!==curType) return false;
+    if(isBanned(t.uid)) return false;
+    if(q){ var hay=(t.user+' '+t.off.join(' ')+' '+t.lf.join(' ')).toLowerCase(); if(!hay.includes(q))return false; }
+    return true;
+  });
+  if(sort==='old') list=list.slice().reverse();
+  document.getElementById('board-meta').textContent=list.length+' listing'+(list.length!==1?'s':'');
+  var grid=document.getElementById('board');
+  if(!list.length){ grid.innerHTML='<div class="empty"><div class="empty-ico"><svg class="ico" style="width:32px;height:32px"><use href="#i-swap"/></svg></div><h3>No trades found</h3><p>Be the first to post!</p></div>'; return; }
+  grid.innerHTML='';
+  list.forEach(function(t,i){
+    var isMe=me&&me.uid===t.uid;
+    var g=GAMES[t.game]||{color:'#888',short:'?'};
+    var card=document.createElement('div');
+    card.className='tc';
+    card.style.animationDelay=(i*0.03)+'s';
+    var offH=t.off.map(function(x){return '<span class="tc-item">'+h(x)+'</span>';}).join('');
+    var lfH=t.lf.map(function(x){return '<span class="tc-item">'+h(x)+'</span>';}).join('');
+    card.innerHTML=
+      '<div class="tc-top">'+
+        '<div class="tc-avi"><img src="'+avi(t.uid)+'" onerror="this.style.opacity=0.2" alt=""></div>'+
+        '<div class="tc-uname">'+h(t.user)+(isMe?'<span style="font-size:9px;color:var(--p2);background:var(--p-bg);border:1px solid var(--p-ln);padding:1px 5px;border-radius:4px;margin-left:5px">You</span>':'')+
+        '</div>'+
+        '<span class="tc-game" style="color:'+g.color+';border-color:'+g.color+'22;background:'+g.color+'11">'+g.short+'</span>'+
+      '</div>'+
+      (t.off.length?'<div class="tc-lbl">Offering</div><div class="tc-items">'+offH+'</div>':'')+
+      (t.off.length&&t.lf.length?'<div class="tc-mid">⇄</div>':'')+
+      (t.lf.length?'<div class="tc-lbl">Looking For</div><div class="tc-items">'+lfH+'</div>':'')+
+      (t.note?'<div class="tc-note">'+h(t.note)+'</div>':'')+
+      '<div class="tc-time">'+ago(t.ts)+'</div>'+
+      '<button class="tc-cta">'+(me?'Contact / Details':'View Details')+'</button>';
+    card.addEventListener('click', function(){ openDetail(t.id); });
+    grid.appendChild(card);
+  });
+}
+
+/* RENDER VALUE GUIDE */
+function renderVG() {
+  var q=(document.getElementById('vq')||{value:''}).value.toLowerCase();
+  var sort=(document.getElementById('vsort')||{value:'val'}).value;
+  var list=VALS.filter(function(v){
+    if(curVG!=='all' && v.g!==curVG) return false;
+    if(q && !v.n.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  if(sort==='val') list.sort(function(a,b){return b.v-a.v;});
+  else if(sort==='name') list.sort(function(a,b){return a.n.localeCompare(b.n);});
+  else list.sort(function(a,b){return (a.tier||'').localeCompare(b.tier||'');});
+  var grid=document.getElementById('vgrid');
+  grid.innerHTML='';
+  list.forEach(function(v){
+    var cls=v.d>0?'up':v.d<0?'dn':'flat';
+    var arrow=v.d>0?'&#9650;':v.d<0?'&#9660;':'-';
+    var g=GAMES[v.g]||{name:v.g,color:'#888'};
+    var card=document.createElement('div'); card.className='vc';
+    card.innerHTML=
+      '<div class="vc-name">'+h(v.n)+'</div>'+
+      '<div class="vc-row">'+
+        '<div class="vc-val">'+fmtVal(v.v)+'</div>'+
+        '<div class="vc-d '+cls+'">'+arrow+' '+(v.d===0?'':fmtVal(Math.abs(v.d)))+'</div>'+
+      '</div>'+
+      '<div class="vc-tier">'+h(v.tier||'')+'</div>'+
+      '<div class="vc-src" style="color:'+g.color+'">'+g.name+'</div>';
+    grid.appendChild(card);
+  });
+}
+
+/* RENDER PROFILE */
+function renderProfile() {
+  if(!me){ document.getElementById('p-name').textContent='Not signed in'; return; }
+  document.getElementById('p-img').src=avi(me.uid);
+  document.getElementById('p-name').textContent=me.user;
+  document.getElementById('p-sub').textContent='UID: '+me.uid;
+  document.title='@'+me.user+' - BloxUse';
+  var myTrades=trades.filter(function(t){return t.uid===me.uid;});
+  document.getElementById('p-ntrades').textContent=myTrades.length;
+  document.getElementById('p-noffers').textContent=myTrades.reduce(function(s,t){return s+t.off.length;},0);
+  document.getElementById('p-member').textContent='Now';
+  var pg=document.getElementById('p-grid');
+  pg.innerHTML='';
+  if(!myTrades.length){ pg.innerHTML='<div class="empty"><div class="empty-ico"><svg class="ico" style="width:28px;height:28px"><use href="#i-swap"/></svg></div><h3>No listings yet</h3></div>'; return; }
+  myTrades.forEach(function(t){
+    var g=GAMES[t.game]||{color:'#888',short:'?'};
+    var card=document.createElement('div'); card.className='tc';
+    var offH=t.off.map(function(x){return '<span class="tc-item">'+h(x)+'</span>';}).join('');
+    var lfH=t.lf.map(function(x){return '<span class="tc-item">'+h(x)+'</span>';}).join('');
+    card.innerHTML=
+      '<div class="tc-top">'+
+        '<span class="tc-game" style="color:'+g.color+';border-color:'+g.color+'22;background:'+g.color+'11">'+g.short+'</span>'+
+        '<span style="font-size:11px;color:var(--t2);flex:1">'+t.type+'</span>'+
+        '<button class="tc-cta" style="background:var(--red-bg);border-color:var(--red-ln);color:var(--red);width:auto;padding:4px 10px;margin:0;font-size:10px" onclick="event.stopPropagation();delTrade(this.dataset.id)" data-id="'+t.id+'">Delete</button>'+
+      '</div>'+
+      (t.off.length?'<div class="tc-lbl">Offering</div><div class="tc-items">'+offH+'</div>':'')+
+      (t.lf.length?'<div class="tc-lbl">Looking For</div><div class="tc-items">'+lfH+'</div>':'')+
+      '<div class="tc-time">'+ago(t.ts)+'</div>';
+    pg.appendChild(card);
+  });
+}
+
+/* DELETE */
+async function delTrade(id, andCloseModal) {
+  if(!confirm('Delete this listing?')) return;
+  if(andCloseModal) closeModal('mo-d');
+  try { await sbFetch('trades?id=eq.'+id, {method:'DELETE'}); trades=trades.filter(function(t){return t.id!==id;}); render(); renderProfile(); toast('Deleted','ok'); }
+  catch(e){ toast('Delete failed - try again','bad'); }
+}
+
+/* DETAIL MODAL */
+function openDetail(id) {
+  var t=trades.find(function(x){return x.id===id;}); if(!t) return;
+  var g=GAMES[t.game]||{name:t.game,color:'#888'};
+  var isMyTrade=me&&me.uid===t.uid;
+  var db=document.getElementById('detail-body');
+  db.innerHTML=
+    '<div class="dt-top">'+
+      '<div class="dt-avi"><img src="'+avi(t.uid)+'" onerror="this.style.opacity=0.2" alt=""></div>'+
+      '<div><div class="dt-name">'+h(t.user)+'</div>'+
+      '<div class="dt-meta" style="color:'+g.color+'">'+g.name+' &middot; '+ago(t.ts)+'</div></div>'+
+    '</div>'+
+    (t.off.length?'<div class="dt-section"><div class="dt-lbl">Offering</div><div class="dt-items">'+t.off.map(function(x){return '<span class="dt-item">'+h(x)+'</span>';}).join('')+'</div></div>':'')+
+    (t.lf.length?'<div class="dt-section"><div class="dt-lbl">Looking For</div><div class="dt-items">'+t.lf.map(function(x){return '<span class="dt-item">'+h(x)+'</span>';}).join('')+'</div></div>':'')+
+    (t.note?'<div class="dt-section"><div class="dt-lbl">Note</div><div style="font-size:12px;color:var(--t2)">'+h(t.note)+'</div></div>':'')+
+    '<div id="detail-btns" style="margin-top:14px;display:flex;flex-direction:column;gap:6px"></div>';
+  var btnWrap=document.getElementById('detail-btns');
+  if(isMyTrade){
+    var del=document.createElement('button'); del.className='btn-p'; del.style.background='var(--red)'; del.textContent='Delete Listing';
+    del.addEventListener('click', function(){ delTrade(t.id, true); });
+    btnWrap.appendChild(del);
+  } else if(me){
+    var view=document.createElement('button'); view.className='btn-p'; view.textContent='View on Roblox';
+    view.addEventListener('click', function(){ window.open('https://www.roblox.com/users/'+t.uid+'/profile'); });
+    btnWrap.appendChild(view);
+  } else {
+    var sign=document.createElement('button'); sign.className='btn-p'; sign.textContent='Sign In to Contact';
+    sign.addEventListener('click', function(){ closeModal('mo-d'); openVerify(); });
+    btnWrap.appendChild(sign);
+  }
+  openModal('mo-d');
+}
+
+/* VERIFY */
+function openVerify() {
+  vstep(1);
+  var u=document.getElementById('vu'); if(u) u.value='';
+  document.getElementById('ve1').style.display='none';
+  document.getElementById('ve2').style.display='none';
+  openModal('mo-v');
+}
+
+function vstep(n) { [1,2,3].forEach(function(i){ var e=document.getElementById('vs'+i); if(e)e.classList.toggle('on',i===n); }); }
+
+function v1() {
+  var u=document.getElementById('vu').value.trim();
+  var e=document.getElementById('ve1');
+  if(!u){ e.textContent='Enter your Roblox username.'; e.style.display='block'; return; }
+  e.style.display='none';
+  vUser=u; vPhrase=genPhrase();
+  document.getElementById('v-phrase').textContent=vPhrase;
+  document.getElementById('v-cpbtn').innerHTML='<svg class="ico" style="width:12px;height:12px"><use href="#i-copy"/></svg> Copy';
+  document.getElementById('v-cpbtn').classList.remove('ok');
+  document.getElementById('ve2').style.display='none';
+  vstep(2);
+}
+
+function v_copy() {
+  var btn=document.getElementById('v-cpbtn');
+  try{ navigator.clipboard.writeText(vPhrase); } catch(e){ var t=document.createElement('textarea'); t.value=vPhrase; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); }
+  btn.innerHTML='<svg class="ico" style="width:12px;height:12px"><use href="#i-check"/></svg> Copied';
+  btn.classList.add('ok');
+  setTimeout(function(){ btn.innerHTML='<svg class="ico" style="width:12px;height:12px"><use href="#i-copy"/></svg> Copy'; btn.classList.remove('ok'); },2000);
+}
+
+async function v2() {
+  var btn=document.getElementById('v-verifybtn');
+  var err=document.getElementById('ve2');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span> Checking...';
+  err.style.display='none';
+  try {
+    var r=await fetch(VERIFY_FN,{ method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_ANON_KEY}, body:JSON.stringify({username:vUser,phrase:vPhrase}) });
+    var data=await r.json();
+    if(!r.ok) throw new Error(data.error||'Verification failed.');
+    me={user:data.user,uid:String(data.uid),ts:Date.now()};
+    saveUser(me); updateNav();
+    document.getElementById('v-okmsg').textContent='Welcome, '+me.user+'!';
+    vstep(3); toast('Verified!','ok');
+    loadTrades().then(render);
+  } catch(e) {
+    err.textContent=e.message||'Failed. Try again.';
+    err.style.display='block';
+  }
+  btn.disabled=false;
+  btn.innerHTML='<svg class="ico" style="width:14px;height:14px"><use href="#i-shield"/></svg>Verify Bio';
+}
+
+function v_newcode() {
+  vPhrase=genPhrase();
+  document.getElementById('v-phrase').textContent=vPhrase;
+  document.getElementById('v-cpbtn').innerHTML='<svg class="ico" style="width:12px;height:12px"><use href="#i-copy"/></svg> Copy';
+  document.getElementById('v-cpbtn').classList.remove('ok');
+  document.getElementById('ve2').style.display='none';
+}
+
+/* POST TRADE */
+function openPost() {
+  if(!me){ openVerify(); return; }
+  if(isBanned(me.uid)){ toast('You are banned.','bad'); return; }
+  offItems=[]; lfItems=[];
+  renderChips('off'); renderChips('lf');
+  document.getElementById('p-note').value='';
+  document.getElementById('pe').style.display='none';
+  document.querySelectorAll('#pg-opts .gopt').forEach(function(b,i){b.classList.toggle('on',i===0);}); pGame='mm2';
+  document.querySelectorAll('.tt').forEach(function(b,i){b.classList.toggle('on',i===0);}); pType='trade';
+  openModal('mo-p');
+}
+
+function selGame(g,el) { pGame=g; document.querySelectorAll('#pg-opts .gopt').forEach(function(b){b.classList.remove('on');}); el.classList.add('on'); }
+function selType(t,el) { pType=t; document.querySelectorAll('.tt').forEach(function(b){b.classList.remove('on');}); el.classList.add('on'); }
+
+function addItem(side) {
+  var inp=document.getElementById(side+'-inp');
+  var v=inp.value.trim(); if(!v) return;
+  if(side==='off') offItems.push(v); else lfItems.push(v);
+  inp.value=''; renderChips(side);
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('off-inp').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addItem('off');}});
+  document.getElementById('lf-inp').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addItem('lf');}});
+});
+
+function renderChips(side) {
+  var arr=side==='off'?offItems:lfItems;
+  var el=document.getElementById(side+'-chips');
+  el.innerHTML='';
+  arr.forEach(function(item,i){
+    var chip=document.createElement('span'); chip.className='chip';
+    chip.textContent=item;
+    var rm=document.createElement('button'); rm.className='chip-rm'; rm.textContent='x';
+    (function(idx){ rm.addEventListener('click',function(){ if(side==='off')offItems.splice(idx,1); else lfItems.splice(idx,1); renderChips(side); }); })(i);
+    chip.appendChild(rm); el.appendChild(chip);
+  });
+}
+
+async function doPost() {
+  var btn=document.getElementById('post-btn');
+  var err=document.getElementById('pe');
+  if(!offItems.length&&!lfItems.length){ err.textContent='Add at least one item.'; err.style.display='block'; return; }
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Posting...';
+  err.style.display='none';
+  try {
+    var row={user:me.user,uid:me.uid,game:pGame,type:pType,off:offItems,lf:lfItems,note:document.getElementById('p-note').value.trim(),ts:Date.now()};
+    await sbFetch('trades',{method:'POST',body:JSON.stringify(row)});
+    closeModal('mo-p'); toast('Trade posted!','ok');
+    await loadTrades(); render();
+  } catch(e){ err.textContent='Post failed.'; err.style.display='block'; }
+  btn.disabled=false; btn.innerHTML='<svg class="ico" style="width:14px;height:14px"><use href="#i-send"/></svg>Post Trade';
+}
+
+/* LOGOUT */
+function doLogout() { clearUser(); me=null; updateNav(); toast('Signed out','ok'); render(); }
+
+/* NAV */
+function updateNav() {
+  var el=document.getElementById('n-right');
+  var ot=document.getElementById('nt-owner');
+  if(me){
+    el.innerHTML='<div class="n-user" id="nav-user-btn"><div class="n-avi"><img src="'+avi(me.uid)+'" onerror="this.style.opacity=0.2" alt=""></div>'+h(me.user)+'</div>';
+    document.getElementById('nav-user-btn').addEventListener('click',function(){goto('profile');});
+    if(ot) ot.style.display=isOwner()?'inline-flex':'none';
+  } else {
+    el.innerHTML='<button class="n-signin" onclick="openVerify()"><svg class="ico" style="width:14px;height:14px;color:var(--p2)"><use href="#i-login"/></svg>Sign in with Roblox</button>';
+    if(ot) ot.style.display='none';
+  }
+}
+
+/* MODALS */
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+['mo-v','mo-p','mo-d','mo-vals'].forEach(function(id){
+  document.getElementById(id).addEventListener('mousedown',function(e){ if(e.target===this) closeModal(id); });
+});
+document.addEventListener('keydown',function(e){ if(e.key==='Escape')['mo-v','mo-p','mo-d','mo-vals'].forEach(closeModal); });
+
+/* TOAST */
+var _tt;
+function toast(msg,cls) {
+  var el=document.getElementById('toast');
+  el.textContent=msg; el.className='show '+(cls||'');
+  clearTimeout(_tt); _tt=setTimeout(function(){ el.className=''; },3000);
+}
+
+/* OWNER PORTAL */
+function renderOwner() {
+  if(!isOwner()) return;
+  var q=((document.getElementById('owner-q')||{}).value||'').toLowerCase();
+  var filter=(document.getElementById('owner-filter')||{}).value||'all';
+  var userMap={};
+  trades.forEach(function(t){ if(!userMap[t.uid]) userMap[t.uid]={uid:t.uid,username:t.user,trades:[]}; userMap[t.uid].trades.push(t); });
+  var users=Object.values(userMap);
+  if(filter==='banned') users=users.filter(function(u){return isBanned(u.uid);});
+  if(filter==='active') users=users.filter(function(u){return !isBanned(u.uid);});
+  if(q) users=users.filter(function(u){return u.username.toLowerCase().includes(q);});
+  document.getElementById('os-trades').textContent=trades.length;
+  document.getElementById('os-users').textContent=Object.keys(userMap).length;
+  document.getElementById('os-banned').textContent=Object.keys(banned).length;
+  document.getElementById('os-today').textContent=trades.filter(function(t){return Date.now()-t.ts<864e5;}).length;
+  var board=document.getElementById('owner-board');
+  board.innerHTML='';
+  if(!users.length){ board.innerHTML='<div class="empty"><h3>No users found</h3></div>'; return; }
+  users.forEach(function(u){
+    var b=isBanned(u.uid);
+    var card=document.createElement('div'); card.className='owner-card';
+    var hd=document.createElement('div'); hd.className='ow-hd';
+    var ud=document.createElement('div'); ud.className='ow-user';
+    var av=document.createElement('div'); av.className='ow-avi';
+    var img=document.createElement('img'); img.src=avi(u.uid); img.onerror=function(){this.style.opacity=0.2;}; img.alt='';
+    av.appendChild(img);
+    var info=document.createElement('div');
+    var nm=document.createElement('div'); nm.className='ow-name'; nm.textContent=u.username;
+    if(b){ var bt=document.createElement('span'); bt.className='banned-tag'; bt.textContent='BANNED'; nm.appendChild(bt); }
+    var mt=document.createElement('div'); mt.className='ow-meta'; mt.textContent='UID: '+u.uid+' - '+u.trades.length+' trade'+(u.trades.length!==1?'s':'');
+    info.appendChild(nm); info.appendChild(mt); ud.appendChild(av); ud.appendChild(info);
+    var acts=document.createElement('div'); acts.className='ow-actions';
+    var pb=document.createElement('button'); pb.style.cssText='padding:5px 11px;font-size:11px;width:auto'; pb.className='btn-p';
+    pb.innerHTML='<svg class="ico" style="width:11px;height:11px"><use href="#i-ext"/></svg> Profile';
+    (function(uid){pb.addEventListener('click',function(){window.open('https://www.roblox.com/users/'+uid+'/profile','_blank');});})(u.uid);
+    acts.appendChild(pb);
+    var tb=document.createElement('button');
+    if(b){ tb.className='btn-unban'; tb.textContent='Unban'; (function(uid,un){tb.addEventListener('click',function(){delete banned[String(uid)];saveBanned();renderOwner();render();toast('Unbanned '+un,'ok');});})(u.uid,u.username); }
+    else  { tb.className='btn-ban';   tb.textContent='Ban';   (function(uid,un){tb.addEventListener('click',function(){banned[String(uid)]={username:un,ts:Date.now()};saveBanned();renderOwner();render();toast('Banned '+un,'bad');});})(u.uid,u.username); }
+    acts.appendChild(tb); hd.appendChild(ud); hd.appendChild(acts); card.appendChild(hd);
+    if(u.trades.length){
+      var cw=document.createElement('div'); cw.className='ow-trades';
+      u.trades.forEach(function(t){
+        var chip=document.createElement('span'); chip.className='ow-trade-chip';
+        chip.title='Click to delete';
+        chip.innerHTML='<svg class="ico" style="width:9px;height:9px"><use href="#i-trash"/></svg>';
+        chip.appendChild(document.createTextNode(t.off.concat(t.lf).slice(0,3).join(', ')||'Trade'));
+        (function(tid,un){chip.addEventListener('click',function(){if(confirm('Delete this trade by '+un+'?')){sbFetch('trades?id=eq.'+tid,{method:'DELETE'}).then(function(){trades=trades.filter(function(x){return x.id!==tid;});renderOwner();render();toast('Deleted','ok');});}});})(t.id,u.username);
+        cw.appendChild(chip);
+      });
+      card.appendChild(cw);
+    }
+    board.appendChild(card);
+  });
+}
+
+/* CALCULATOR */
+var calcGame='mm2';
+var calcSides={left:[],right:[]};
+
+function setCalcGame(g,el) {
+  calcGame=g;
+  document.querySelectorAll('#calc-game-opts .gopt').forEach(function(b){b.classList.remove('on');}); el.classList.add('on');
+  calcSides={left:[],right:[]}; renderCalcSide('left'); renderCalcSide('right'); updateCalcTotals();
+  document.getElementById('calc-q-left').value=''; document.getElementById('calc-q-right').value='';
+}
+
+function initCalc() { renderCalcSide('left'); renderCalcSide('right'); updateCalcTotals(); }
+
+function renderCalcDrop(side) {
+  var q=document.getElementById('calc-q-'+side).value.toLowerCase().trim();
+  var drop=document.getElementById('calc-drop-'+side);
+  var items=VALS.filter(function(v){return v.g===calcGame;}).sort(function(a,b){return b.v-a.v;});
+  if(q) items=items.filter(function(i){return i.n.toLowerCase().includes(q);});
+  items=items.slice(0,30);
+  drop.innerHTML='';
+  if(!items.length){drop.classList.remove('open');return;}
+  items.forEach(function(item){
+    var d=document.createElement('div'); d.className='calc-drop-item';
+    var n=document.createElement('span'); n.style.fontWeight='600'; n.textContent=item.n;
+    var v=document.createElement('span'); v.className='calc-drop-val'; v.textContent=fmtVal(item.v);
+    d.appendChild(n); d.appendChild(v);
+    d.addEventListener('click',(function(it){return function(){addCalcItem(side,it.n);};})(item));
+    drop.appendChild(d);
+  });
+  drop.classList.add('open');
+}
+
+function addCalcItem(side,name) {
+  var item=VALS.find(function(v){return v.n===name&&v.g===calcGame;}); if(!item) return;
+  var ex=calcSides[side].find(function(r){return r.n===name;});
+  if(ex) ex.qty++; else calcSides[side].push({n:item.n,v:item.v,qty:1});
+  document.getElementById('calc-q-'+side).value='';
+  document.getElementById('calc-drop-'+side).classList.remove('open');
+  renderCalcSide(side); updateCalcTotals();
+}
+
+function removeCalcItem(side,name) {
+  calcSides[side]=calcSides[side].filter(function(r){return r.n!==name;});
+  renderCalcSide(side); updateCalcTotals();
+}
+
+function renderCalcSide(side) {
+  var el=document.getElementById('calc-items-'+side);
+  if(!calcSides[side].length){ el.innerHTML='<div class="calc-empty">Search and add items</div>'; return; }
+  el.innerHTML='';
+  calcSides[side].forEach(function(row){
+    var div=document.createElement('div'); div.className='calc-item-row';
+    var nm=document.createElement('div'); nm.className='calc-item-name'; nm.textContent=row.n;
+    var qty=document.createElement('input'); qty.className='calc-item-qty'; qty.type='number'; qty.min='1'; qty.value=row.qty;
+    var valEl=document.createElement('div'); valEl.className='calc-item-val'; valEl.textContent=fmtVal(row.v*row.qty);
+    qty.addEventListener('input',(function(r,ve){return function(){r.qty=Math.max(1,parseInt(this.value)||1);ve.textContent=fmtVal(r.v*r.qty);updateCalcTotals();};})(row,valEl));
+    var rm=document.createElement('button'); rm.className='calc-item-rm'; rm.textContent='×'; rm.title='Remove';
+    (function(n){rm.addEventListener('click',function(){removeCalcItem(side,n);});})(row.n);
+    div.appendChild(nm); div.appendChild(qty); div.appendChild(valEl); div.appendChild(rm);
+    el.appendChild(div);
+  });
+}
+
+function sideTotal(side) { return calcSides[side].reduce(function(s,r){return s+r.v*r.qty;},0); }
+
+function updateCalcTotals() {
+  var l=sideTotal('left'), r=sideTotal('right');
+  document.getElementById('calc-total-left').textContent=fmtVal(l);
+  document.getElementById('calc-total-right').textContent=fmtVal(r);
+  var diff=r-l;
+  var diffEl=document.getElementById('calc-diff');
+  var verdEl=document.getElementById('calc-verdict');
+  var verdB=document.getElementById('calc-verdict-big');
+  var sumEl=document.getElementById('calc-summary');
+  if(!l&&!r){sumEl.style.display='none';verdEl.textContent='';return;}
+  sumEl.style.display='flex';
+  var pct=l>0?Math.round(Math.abs(diff)/l*100):0;
+  if(Math.abs(diff)<0.01*Math.max(l,r,1)){
+    diffEl.textContent='Even'; diffEl.style.color='var(--green)';
+    verdB.textContent='Fair Trade'; verdB.style.cssText='color:var(--green);border-color:var(--green-ln);background:var(--green-bg)';
+    verdEl.innerHTML='<span style="color:var(--green)">Fair</span>';
+  } else if(diff>0){
+    diffEl.textContent='+'+fmtVal(diff); diffEl.style.color='var(--green)';
+    verdB.textContent='You Profit ('+pct+'%)'; verdB.style.cssText='color:var(--green);border-color:var(--green-ln);background:var(--green-bg)';
+    verdEl.innerHTML='<span style="color:var(--green)">+'+pct+'%</span>';
+  } else {
+    diffEl.textContent=fmtVal(diff); diffEl.style.color='var(--red)';
+    verdB.textContent='You Lose ('+pct+'%)'; verdB.style.cssText='color:var(--red);border-color:var(--red-ln);background:var(--red-bg)';
+    verdEl.innerHTML='<span style="color:var(--red)">-'+pct+'%</span>';
+  }
+}
+
+function clearCalc() {
+  calcSides={left:[],right:[]}; renderCalcSide('left'); renderCalcSide('right'); updateCalcTotals();
+  document.getElementById('calc-q-left').value=''; document.getElementById('calc-q-right').value='';
+}
+
+document.addEventListener('click',function(e){
+  ['left','right'].forEach(function(side){
+    var drop=document.getElementById('calc-drop-'+side);
+    var inp=document.getElementById('calc-q-'+side);
+    if(drop&&inp&&!drop.contains(e.target)&&e.target!==inp) drop.classList.remove('open');
+  });
+});
+['left','right'].forEach(function(side){
+  document.getElementById('calc-q-'+side).addEventListener('input',function(){renderCalcDrop(side);});
+  document.getElementById('calc-q-'+side).addEventListener('focus',function(){renderCalcDrop(side);});
+});
+
+/* VALUE EDITOR */
+function renderValEditor() {
+  if(!isOwner()) return;
+  var game=document.getElementById('ve-game').value;
+  var q=(document.getElementById('ve-q').value||'').toLowerCase();
+  var items=VALS.filter(function(v){return v.g===game;});
+  if(q) items=items.filter(function(v){return v.n.toLowerCase().includes(q);});
+  items.sort(function(a,b){return b.v-a.v;});
+  var list=document.getElementById('ve-list');
+  list.innerHTML='';
+  items.forEach(function(item){
+    var idx=VALS.indexOf(item);
+    var row=document.createElement('div'); row.className='ve-row';
+    var nm=document.createElement('div'); nm.className='ve-name'; nm.textContent=item.n;
+    var tier=document.createElement('span'); tier.style.cssText='font-size:9px;color:var(--t4);font-family:var(--mono);margin-left:6px'; tier.textContent=item.tier||'';
+    nm.appendChild(tier);
+    var vi=document.createElement('input'); vi.className='ve-input'; vi.type='number'; vi.value=item.v; vi.title='Value';
+    vi.addEventListener('change',(function(i){return function(){var v=parseFloat(this.value);if(!isNaN(v)){VALS[i].v=v;updateCalcTotals();}};})(idx));
+    var di=document.createElement('input'); di.className='ve-input'; di.type='number'; di.value=item.d; di.title='Trend'; di.style.width='65px';
+    di.addEventListener('change',(function(i){return function(){var v=parseFloat(this.value);if(!isNaN(v))VALS[i].d=v;};})(idx));
+    var del=document.createElement('button'); del.className='ve-del'; del.textContent='Delete';
+    (function(i,n){del.addEventListener('click',function(){if(confirm('Delete "'+n+'"?')){VALS.splice(i,1);renderValEditor();renderVG();toast('Deleted '+n,'ok');}});})(idx,item.n);
+    row.appendChild(nm); row.appendChild(vi); row.appendChild(di); row.appendChild(del);
+    list.appendChild(row);
+  });
+}
+
+function addNewItem() {
+  var game=document.getElementById('ve-game').value;
+  var name=prompt('Item name:'); if(!name||!name.trim()) return;
+  var tier=prompt('Tier:')||'Common';
+  var val=parseFloat(prompt('Value:')||'0'); if(isNaN(val)) val=0;
+  VALS.push({n:name.trim(),g:game,tier:tier.trim(),v:val,d:0});
+  renderValEditor(); renderVG(); toast('Added '+name,'ok');
+}
+
+/* BOOT */
+(function(){
+  loadBanned();
+  me=loadUser();
+  updateNav();
+  document.getElementById('brand-link').addEventListener('click',function(e){e.preventDefault();goto('trades');});
+  loadTrades().then(render);
+})();
+</script>
+</body>
+</html>
